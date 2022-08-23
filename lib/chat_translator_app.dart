@@ -1,8 +1,8 @@
+import 'package:chat_translator/providers/auth_provider.dart';
 import 'package:chat_translator/router/router_helper.dart';
+import 'package:chat_translator/router/routes.dart';
 import 'package:chat_translator/screens/home_screen.dart';
 import 'package:chat_translator/screens/sign_in_screen.dart';
-import 'package:chat_translator/services/authentication_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -28,13 +28,7 @@ class _ChatTranslatorAppState extends State<ChatTranslatorApp> {
       designSize: const Size(414, 896),
       builder: (context, child) => MultiProvider(
         providers: [
-          Provider<AuthenticationService>(
-            create: (_) => AuthenticationService(FirebaseAuth.instance),
-          ),
-          StreamProvider(
-            create: (context) => context.read<AuthenticationService>().authStateChanges,
-            initialData: null,
-          )
+          ChangeNotifierProvider<AuthProvider>.value(value: AuthProvider()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -43,6 +37,8 @@ class _ChatTranslatorAppState extends State<ChatTranslatorApp> {
             primarySwatch: Colors.blue,
           ),
           home: const AuthenticationWrapper(),
+          onGenerateRoute: RouterHelper.router.generator,
+          initialRoute: Routes.SIGN_IN_SCREEN,
         ),
       ),
     );
@@ -54,11 +50,11 @@ class AuthenticationWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firebaseUser = context.watch<User?>();
-
-    if (firebaseUser != null) {
+    bool isLogged = Provider.of<AuthProvider>(context).isLogged;
+    if (isLogged) {
       return HomeScreen();
+    } else {
+      return SignInScreen();
     }
-    return SignInScreen();
   }
 }

@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class SignInScreen extends StatelessWidget {
-  SignInScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatelessWidget {
+  SignUpScreen({Key? key}) : super(key: key);
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -20,9 +20,6 @@ class SignInScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // SizedBox(
-            //   height: 100,
-            // ),
             DefaultTextField(
               controller: emailController,
               hintText: "Email",
@@ -33,14 +30,19 @@ class SignInScreen extends StatelessWidget {
             DefaultTextField(
               controller: passwordController,
               hintText: "Password",
+              obscureText: true,
+              suffixIcon: IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.remove_red_eye),
+              ),
             ),
             SizedBox(
               height: 16.h,
             ),
             DefaultButton(
-              text: "Sign In",
+              text: "Sign Up",
               onPressed: () {
-                Provider.of<AuthProvider>(context, listen: false).signIn(
+                Provider.of<AuthProvider>(context, listen: false).signUp(
                   emailController.text.trim(),
                   passwordController.text.trim(),
                 );
@@ -52,13 +54,13 @@ class SignInScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Don't have an account?"),
+                const Text("Already have an account?"),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, Routes.SIGN_UP_SCREEN);
+                    Navigator.pushNamed(context, Routes.SIGN_IN_SCREEN);
                   },
                   child: const Text(
-                    "Sign Up",
+                    "Sign In",
                     style: TextStyle(color: kBrandBlue),
                   ),
                 ),
