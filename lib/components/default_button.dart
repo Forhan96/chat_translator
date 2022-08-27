@@ -24,7 +24,7 @@ class DefaultButton extends StatelessWidget {
       height: height,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: color ?? kBrandBlue,
+          primary: color ?? kBrandGreen,
         ),
         onPressed: onPressed as void Function()?,
         child: Text(

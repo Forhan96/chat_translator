@@ -5,7 +5,7 @@ import 'package:hexcolor/hexcolor.dart';
 const kBrandGrey = Color(0xfff2f4f8);
 const kBrandBlack = Color(0xff111111);
 const kBrandOrange = Color(0xffF2994A);
-const kBrandBlue = Color(0xff0c6495);
+const kBrandGreen = Color(0xff94B49F);
 var kBrandBg = Colors.grey[200];
 var kBrandSubtitle = HexColor("#36454F");
 

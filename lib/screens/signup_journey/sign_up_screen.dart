@@ -14,6 +14,8 @@ class SignUpScreen extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    AuthProvider _authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(16),
@@ -31,21 +33,44 @@ class SignUpScreen extends StatelessWidget {
               controller: passwordController,
               hintText: "Password",
               obscureText: true,
-              suffixIcon: IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.remove_red_eye),
-              ),
+              // suffixIcon: IconButton(
+              //   onPressed: () {},
+              //   icon: Icon(Icons.remove_red_eye),
+              // ),
             ),
             SizedBox(
               height: 16.h,
             ),
             DefaultButton(
               text: "Sign Up",
-              onPressed: () {
-                Provider.of<AuthProvider>(context, listen: false).signUp(
-                  emailController.text.trim(),
-                  passwordController.text.trim(),
-                );
+              onPressed: () async {
+                if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+                  await _authProvider
+                      .signUp(emailController.text.trim(), passwordController.text.trim())
+                      .then((result) {
+                    if (result == "success") {
+                      print("++++++++++++++++++++++++${_authProvider.isUserSignedIn()}");
+                      Navigator.pushReplacementNamed(context, Routes.AUTH_WRAPPER);
+                    }
+                    final snackBar = SnackBar(
+                      backgroundColor: _authProvider.isLogged ? kBrandGreen : Colors.red,
+                      content: Text(
+                        result,
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  });
+                } else {
+                  const snackBar = SnackBar(
+                    backgroundColor: Colors.red,
+                    content: Text(
+                      "Email or Password can't be empty",
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
               },
             ),
             SizedBox(
@@ -61,7 +86,7 @@ class SignUpScreen extends StatelessWidget {
                   },
                   child: const Text(
                     "Sign In",
-                    style: TextStyle(color: kBrandBlue),
+                    style: TextStyle(color: kBrandGreen),
                   ),
                 ),
               ],

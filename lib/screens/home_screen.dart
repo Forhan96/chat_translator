@@ -1,4 +1,5 @@
 import 'package:chat_translator/providers/auth_provider.dart';
+import 'package:chat_translator/router/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +17,7 @@ class HomeScreen extends StatelessWidget {
             RaisedButton(
               onPressed: () {
                 Provider.of<AuthProvider>(context, listen: false).signOut();
+                Navigator.pushReplacementNamed(context, Routes.AUTH_WRAPPER);
               },
               child: Text("Sign out"),
             ),

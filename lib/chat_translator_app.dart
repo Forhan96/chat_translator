@@ -24,22 +24,19 @@ class _ChatTranslatorAppState extends State<ChatTranslatorApp> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider _authProvider = Provider.of<AuthProvider>(context);
     return ScreenUtilInit(
       designSize: const Size(414, 896),
-      builder: (context, child) => MultiProvider(
-        providers: [
-          ChangeNotifierProvider<AuthProvider>.value(value: AuthProvider()),
-        ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Flutter_ScreenUtil',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          home: const AuthenticationWrapper(),
-          onGenerateRoute: RouterHelper.router.generator,
-          initialRoute: Routes.SIGN_IN_SCREEN,
+      builder: (context, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Chat Translator',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
         ),
+        home: const AuthenticationWrapper(),
+        // home: _authProvider.isUserSignedIn() ? HomeScreen() : SignInScreen(),
+        onGenerateRoute: RouterHelper.router.generator,
+        initialRoute: Routes.SPLASH_SCREEN,
       ),
     );
   }
@@ -50,8 +47,8 @@ class AuthenticationWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isLogged = Provider.of<AuthProvider>(context).isLogged;
-    if (isLogged) {
+    AuthProvider _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (_authProvider.isUserSignedIn()) {
       return HomeScreen();
     } else {
       return SignInScreen();
