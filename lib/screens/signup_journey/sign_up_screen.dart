@@ -14,7 +14,7 @@ class SignUpScreen extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    AuthProvider _authProvider = Provider.of<AuthProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       body: Container(
@@ -45,15 +45,15 @@ class SignUpScreen extends StatelessWidget {
               text: "Sign Up",
               onPressed: () async {
                 if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-                  await _authProvider
+                  await authProvider
                       .signUp(emailController.text.trim(), passwordController.text.trim())
                       .then((result) {
                     if (result == "success") {
-                      print("++++++++++++++++++++++++${_authProvider.isUserSignedIn()}");
+                      print("++++++++++++++++++++++++${authProvider.isUserSignedIn()}");
                       Navigator.pushReplacementNamed(context, Routes.AUTH_WRAPPER);
                     }
                     final snackBar = SnackBar(
-                      backgroundColor: _authProvider.isLogged ? kBrandGreen : Colors.red,
+                      backgroundColor: authProvider.isLogged ? kBrandGreen : Colors.red,
                       content: Text(
                         result,
                         textAlign: TextAlign.center,
