@@ -43,11 +43,13 @@ class SignInScreen extends StatelessWidget {
               text: "Sign In",
               onPressed: () async {
                 if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-                  await authProvider.signIn(emailController.text.trim(), passwordController.text.trim()).then((result) {
+                  await authProvider
+                      .signIn(emailController.text.trim(), passwordController.text.trim())
+                      .then((result) {
                     if (authProvider.isUserSignedIn() && authProvider.isVerified()) {
                       Navigator.pushReplacementNamed(context, Routes.HOME_SCREEN);
                     } else if (!authProvider.isVerified()) {
-                      print("========================not verified");
+                      Navigator.pushReplacementNamed(context, Routes.SIGN_IN_SCREEN);
                     }
                     final snackBar = SnackBar(
                       backgroundColor: authProvider.isLogged ? kBrandGreen : Colors.red,

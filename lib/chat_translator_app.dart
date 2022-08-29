@@ -48,7 +48,7 @@ class AuthenticationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider _authProvider = Provider.of<AuthProvider>(context, listen: false);
-    if (_authProvider.isUserSignedIn()) {
+    if (_authProvider.isUserSignedIn() && _authProvider.isVerified()) {
       return HomeScreen();
     } else {
       return SignInScreen();

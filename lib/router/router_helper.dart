@@ -3,6 +3,7 @@ import 'package:chat_translator/router/routes.dart';
 import 'package:chat_translator/screens/home_screen.dart';
 import 'package:chat_translator/screens/sign_in_screen.dart';
 import 'package:chat_translator/screens/signup_journey/sign_up_screen.dart';
+import 'package:chat_translator/screens/signup_journey/verify_screen.dart';
 import 'package:chat_translator/screens/splash_screen.dart';
 import 'package:fluro/fluro.dart';
 
@@ -17,6 +18,7 @@ class RouterHelper {
   //account
   static final Handler _signInScreenHandler = Handler(handlerFunc: (context, parameters) => SignInScreen());
   static final Handler _signUpScreenHandler = Handler(handlerFunc: (context, parameters) => SignUpScreen());
+  static final Handler _verifyScreenHandler = Handler(handlerFunc: (context, parameters) => VerifyScreen());
 
   static final Handler _homeScreenHandler = Handler(handlerFunc: (context, parameters) => HomeScreen());
 
@@ -44,6 +46,11 @@ class RouterHelper {
     router.define(
       Routes.SIGN_UP_SCREEN,
       handler: _signUpScreenHandler,
+      transitionType: TransitionType.cupertino,
+    );
+    router.define(
+      Routes.VERIFY_SCREEN,
+      handler: _verifyScreenHandler,
       transitionType: TransitionType.cupertino,
     );
 

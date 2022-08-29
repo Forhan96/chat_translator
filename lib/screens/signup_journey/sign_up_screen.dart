@@ -49,8 +49,7 @@ class SignUpScreen extends StatelessWidget {
                       .signUp(emailController.text.trim(), passwordController.text.trim())
                       .then((result) {
                     if (result == "success") {
-                      print("++++++++++++++++++++++++${authProvider.isUserSignedIn()}");
-                      Navigator.pushReplacementNamed(context, Routes.AUTH_WRAPPER);
+                      Navigator.pushReplacementNamed(context, Routes.VERIFY_SCREEN);
                     }
                     final snackBar = SnackBar(
                       backgroundColor: authProvider.isLogged ? kBrandGreen : Colors.red,

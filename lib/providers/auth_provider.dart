@@ -38,6 +38,7 @@ class AuthProvider with ChangeNotifier {
     String? errorMessage;
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      await _firebaseAuth.currentUser?.sendEmailVerification();
       notifyListeners();
     } on FirebaseAuthException catch (error) {
       print("=================${error.code}___${error.message}");
@@ -63,7 +64,6 @@ class AuthProvider with ChangeNotifier {
     String? errorMessage;
     try {
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-      await _firebaseAuth.currentUser?.sendEmailVerification();
       _isLogged = true;
       notifyListeners();
     } on FirebaseAuthException catch (error) {

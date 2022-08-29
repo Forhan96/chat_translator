@@ -6,4 +6,5 @@ class Routes {
   static String SPLASH_SCREEN = "/splash-screen";
   static String SIGN_IN_SCREEN = "/sign-in-screen";
   static String SIGN_UP_SCREEN = "/sign-up-screen";
+  static String VERIFY_SCREEN = "/verify-screen";
 }
