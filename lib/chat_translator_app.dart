@@ -3,6 +3,7 @@ import 'package:chat_translator/router/router_helper.dart';
 import 'package:chat_translator/router/routes.dart';
 import 'package:chat_translator/screens/home_screen.dart';
 import 'package:chat_translator/screens/sign_in_screen.dart';
+import 'package:chat_translator/screens/signup_journey/verify_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -48,8 +49,12 @@ class AuthenticationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider _authProvider = Provider.of<AuthProvider>(context, listen: false);
-    if (_authProvider.isUserSignedIn() && _authProvider.isVerified()) {
-      return HomeScreen();
+    if (_authProvider.isUserSignedIn()) {
+      if (_authProvider.isVerified()) {
+        return HomeScreen();
+      } else {
+        return VerifyScreen();
+      }
     } else {
       return SignInScreen();
     }
