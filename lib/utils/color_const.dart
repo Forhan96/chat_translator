@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+class AppColors {
+  static const Color primaryColor = Color(0xff94B49F);
+}
+
 //brand colors
 const kBrandGrey = Color(0xfff2f4f8);
 const kBrandBlack = Color(0xff111111);
