@@ -14,32 +14,26 @@ class DefaultNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int currentIndex = 0;
     return ConvexAppBar(
       initialActiveIndex: initialActiveIndex,
       onTap: (int i) {
-        // if (currentIndex == i) {
-        //   print("$currentIndex--------------$i");
-        //   return;
-        // }
-        // currentIndex = i;
+        if (initialActiveIndex == i) {
+          return;
+        }
         switch (i) {
           case 0:
-            Navigator.pushNamed(context, Routes.HOME_SCREEN);
+            Navigator.pushNamedAndRemoveUntil(context, Routes.HOME_SCREEN, (params) => false);
             break;
           case 1:
-            Navigator.pushNamed(context, Routes.SEARCH_SCREEN);
+            Navigator.pushNamedAndRemoveUntil(context, Routes.SEARCH_SCREEN, (params) => false);
             break;
           case 2:
-            Navigator.pushNamed(context, Routes.PROFILE_SCREEN);
+            Navigator.pushNamedAndRemoveUntil(context, Routes.PROFILE_SCREEN, (params) => false);
             break;
           default:
             print(i);
         }
       },
-      // onTap: (int i) {
-      //   onTap.call(i);
-      // },
       backgroundColor: AppColors.primaryColor,
       style: TabStyle.textIn,
       items: [
