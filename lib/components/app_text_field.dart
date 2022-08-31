@@ -1,19 +1,24 @@
+import 'package:chat_translator/utils/color_const.dart';
 import 'package:flutter/material.dart';
 
 class TextInputField extends StatefulWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String label;
-  final bool modal;
+  final String? hintText;
+  final bool enabled;
   final FocusNode? focusNode;
   final int? characterLength;
   final Widget? prefix;
+  final String? Function(String?)? validator;
   TextInputField({
-    required this.controller,
+    this.controller,
     required this.label,
-    this.modal = false,
+    this.enabled = true,
     this.focusNode,
     this.characterLength,
-    required this.prefix,
+    this.prefix,
+    this.hintText,
+    this.validator,
   });
 
   @override
@@ -26,16 +31,30 @@ class _TextInputFieldState extends State<TextInputField> {
     return TextFormField(
       focusNode: widget.focusNode,
       controller: widget.controller,
+      validator: widget.validator,
       style: const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold,
       ),
       decoration: InputDecoration(
-        enabled: !widget.modal,
+        enabled: widget.enabled,
         floatingLabelBehavior: FloatingLabelBehavior.auto,
         labelStyle: TextStyle(color: Colors.grey[800]),
         labelText: widget.label,
+        hintText: widget.hintText,
         contentPadding: const EdgeInsets.all(18.0),
+        errorBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderSide: BorderSide(
+            color: AppColors.errorColor,
+          ),
+        ),
+        focusedErrorBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderSide: BorderSide(
+            color: AppColors.errorColor,
+          ),
+        ),
         enabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           borderSide: BorderSide(

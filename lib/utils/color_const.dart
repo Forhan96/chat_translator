@@ -3,6 +3,7 @@ import 'package:hexcolor/hexcolor.dart';
 
 class AppColors {
   static const Color primaryColor = Color(0xff94B49F);
+  static const Color errorColor = Color(0xffD06767);
 }
 
 //brand colors

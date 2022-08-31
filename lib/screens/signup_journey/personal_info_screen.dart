@@ -2,116 +2,156 @@ import 'package:chat_translator/components/app_text_field.dart';
 import 'package:chat_translator/components/default_container.dart';
 import 'package:chat_translator/utils/calculators.dart';
 import 'package:chat_translator/utils/color_const.dart';
+import 'package:chat_translator/utils/input_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-class PersonalInfoScreen extends StatelessWidget {
+class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
   const PersonalInfoScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _nameController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    TextEditingController nameController = TextEditingController();
+    TextEditingController emailController = TextEditingController();
+    TextEditingController dobController = TextEditingController();
+    TextEditingController sexValueController = TextEditingController();
+    TextEditingController bioController = TextEditingController();
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.primaryColor,
+        title: Text("Personal Info"),
+        centerTitle: true,
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          if (formKey.currentState!.validate()) {}
+        },
+        label: Row(
+          children: const [
+            Text("Save"),
+            Icon(Icons.arrow_forward_ios_rounded),
+          ],
+        ),
+        backgroundColor: AppColors.primaryColor,
+      ),
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(
             horizontal: 12.w,
             vertical: 10.h,
           ),
-          child: Column(
-            children: [
-              DefaultContainer(
-                padding: EdgeInsets.all(10),
-                child: TextInputField(
-                  prefix: null,
-                  controller: _nameController,
-                  label: 'Name',
-                ),
-              ),
-              SizedBox(
-                height: 8.h,
-              ),
-              DefaultContainer(
-                padding: EdgeInsets.all(10),
-                child: TextInputField(
-                  prefix: null,
-                  controller: _nameController,
-                  label: 'Email',
-                ),
-              ),
-              SizedBox(
-                height: 8.h,
-              ),
-              InkWell(
-                onTap: () {
-                  _showDatePicker(context);
-                },
-                child: DefaultContainer(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 24.h,
-                    horizontal: 16.w,
+          child: Form(
+            key: formKey,
+            child: ListView(
+              children: [
+                DefaultContainer(
+                  padding: const EdgeInsets.all(10),
+                  child: TextInputField(
+                    controller: nameController,
+                    validator: (name) {
+                      if (isValidName(name ?? "")) {
+                        return null;
+                      } else {
+                        return 'Enter a valid name';
+                      }
+                    },
+                    label: 'Name',
                   ),
-                  child: Text(
-                    "Date of Birth",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                ),
+                SizedBox(
+                  height: 8.h,
+                ),
+                DefaultContainer(
+                  padding: const EdgeInsets.all(10),
+                  child: TextInputField(
+                    controller: emailController,
+                    validator: (email) {
+                      if (isEmailValid(email ?? "")) {
+                        return null;
+                      } else {
+                        return 'Enter a valid email address';
+                      }
+                    },
+                    label: 'Email',
+                  ),
+                ),
+                SizedBox(
+                  height: 8.h,
+                ),
+                InkWell(
+                  onTap: () {
+                    _showDatePicker(context, controller: dobController);
+                  },
+                  child: DefaultContainer(
+                    padding: const EdgeInsets.all(10),
+                    child: TextInputField(
+                      controller: dobController,
+                      validator: (dob) {
+                        if (isNotEmpty(dob ?? "")) {
+                          return null;
+                        } else {
+                          return 'Provide Date of Birth';
+                        }
+                      },
+                      label: 'Date of Birth',
+                      enabled: false,
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 8.h,
-              ),
-              InkWell(
-                onTap: () {
-                  _showGenderOptions(context);
-                },
-                child: DefaultContainer(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 24.h,
-                    horizontal: 16.w,
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blueAccent),
-                    ),
-                    child: Text(
-                      "Sex",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                SizedBox(
+                  height: 8.h,
+                ),
+                InkWell(
+                  onTap: () {
+                    _showGenderOptions(context, controller: sexValueController);
+                  },
+                  child: DefaultContainer(
+                    padding: const EdgeInsets.all(10),
+                    child: TextInputField(
+                      controller: sexValueController,
+                      validator: (sex) {
+                        if (isNotEmpty(sex ?? "")) {
+                          return null;
+                        } else {
+                          return 'Select your sex';
+                        }
+                      },
+                      label: 'Sex',
+                      enabled: false,
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 8.h,
-              ),
-              DefaultContainer(
-                padding: EdgeInsets.all(10),
-                child: TextInputField(
-                  prefix: null,
-                  controller: _nameController,
-                  label: 'Bio',
+                SizedBox(
+                  height: 8.h,
                 ),
-              ),
-            ],
+                DefaultContainer(
+                  padding: const EdgeInsets.all(10),
+                  child: TextInputField(
+                    controller: bioController,
+                    label: 'Bio',
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  void _showDatePicker(BuildContext context) {
+  void _showDatePicker(BuildContext context, {required TextEditingController controller}) {
     final dateValue = Calculators().getPrevDate(14);
     // controllerDate = _currentUser().birthDate as DateTime;
     showModalBottomSheet<void>(
       context: context,
-      builder: (BuildContext context) {
+      builder: (
+        BuildContext context,
+      ) {
         return Container(
           height: 350,
           color: Theme.of(context).canvasColor,
@@ -129,6 +169,8 @@ class PersonalInfoScreen extends StatelessWidget {
               Navigator.pop(context);
             },
             onSubmit: (Object? value) {
+              controller.text = DateFormat('dd MMMM, yyyy').format(value as DateTime);
+
               // setState(() {
               //   _birthDateController.text = DateFormat('dd MMMM, yyyy').format(value as DateTime);
               //   controllerDate = value;
@@ -145,7 +187,7 @@ class PersonalInfoScreen extends StatelessWidget {
     );
   }
 
-  void _showGenderOptions(BuildContext context) {
+  void _showGenderOptions(BuildContext context, {required TextEditingController controller}) {
     showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) {
@@ -171,144 +213,96 @@ class PersonalInfoScreen extends StatelessWidget {
               SizedBox(
                 height: 5.h,
               ),
-              InkWell(
+              GenderSelectionTile(
                 onTap: () {
-                  // setState(() {
-                  //   _genderValueController.text = "Male";
-                  //   _genderController.text = AppLocalizations.of(context)!.male;
-                  // });
+                  controller.text = "Male";
                   Navigator.pop(context);
                 },
-                child: Container(
-                  margin: const EdgeInsets.only(
-                    left: 16,
-                    right: 16,
-                    top: 10,
-                    // bottom: 16,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 2,
-                    horizontal: 18,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(
-                          0xffC2C2C2,
-                        ).withOpacity(0.2),
-                        blurRadius: 20,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: ListTile(
-                    leading: const Icon(
-                      Icons.male_outlined,
-                      size: 24,
-                    ),
-                    // selected: isSelected,
-                    title: Text(
-                      "Male",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[800]),
-                    ),
-                  ),
+                leading: const Icon(
+                  Icons.male_outlined,
+                  size: 24,
                 ),
+                text: 'Male',
               ),
-              InkWell(
+              GenderSelectionTile(
                 onTap: () {
-                  // setState(() {
-                  //   _genderValueController.text = "Female";
-                  //   _genderController.text = AppLocalizations.of(context)!.female;
-                  // });
+                  controller.text = "Female";
                   Navigator.pop(context);
                 },
-                child: Container(
-                  margin: const EdgeInsets.only(
-                    left: 16,
-                    right: 16,
-                    top: 10,
-                    // bottom: 16,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 2,
-                    horizontal: 18,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(
-                          0xffC2C2C2,
-                        ).withOpacity(0.2),
-                        blurRadius: 20,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: ListTile(
-                    leading: const Icon(
-                      Icons.female_outlined,
-                      size: 24,
-                    ),
-                    // selected: isSelected,
-                    title: Text(
-                      "Female",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[800]),
-                    ),
-                  ),
+                leading: const Icon(
+                  Icons.female_outlined,
+                  size: 24,
                 ),
+                text: 'Female',
               ),
-              InkWell(
+              GenderSelectionTile(
                 onTap: () {
-                  // setState(() {
-                  //   _genderValueController.text = "Rather not say";
-                  //   _genderController.text = AppLocalizations.of(context)!.rather_not_say;
-                  // });
+                  controller.text = "Rather not say";
                   Navigator.pop(context);
                 },
-                child: Container(
-                  margin: const EdgeInsets.only(
-                    left: 16,
-                    right: 16,
-                    top: 10,
-                    // bottom: 16,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(
-                          0xffC2C2C2,
-                        ).withOpacity(0.2),
-                        blurRadius: 20,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: ListTile(
-                    leading: const Icon(
-                      Icons.radio_button_off_outlined,
-                      size: 24,
-                    ),
-                    // selected: isSelected,
-                    title: Text(
-                      "Rather Not Say",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[800]),
-                    ),
-                  ),
+                leading: const Icon(
+                  Icons.radio_button_off_outlined,
+                  size: 24,
                 ),
+                text: "Rather not say",
               ),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class GenderSelectionTile extends StatelessWidget {
+  final Function onTap;
+  final Icon leading;
+  final String text;
+  const GenderSelectionTile({
+    Key? key,
+    required this.onTap,
+    required this.leading,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        onTap.call();
+      },
+      child: Container(
+        margin: const EdgeInsets.only(
+          left: 16,
+          right: 16,
+          top: 10,
+          // bottom: 16,
+        ),
+        padding: const EdgeInsets.symmetric(
+          vertical: 2,
+          horizontal: 18,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: const Color(
+                0xffC2C2C2,
+              ).withOpacity(0.2),
+              blurRadius: 20,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: ListTile(
+          leading: leading,
+          title: Text(
+            text,
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[800]),
+          ),
+        ),
+      ),
     );
   }
 }
