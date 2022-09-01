@@ -43,6 +43,9 @@ class _TextInputFieldState extends State<TextInputField> {
         labelText: widget.label,
         hintText: widget.hintText,
         contentPadding: const EdgeInsets.all(18.0),
+        errorStyle: const TextStyle(
+          color: AppColors.errorColor,
+        ),
         errorBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           borderSide: BorderSide(
