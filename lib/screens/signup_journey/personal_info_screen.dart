@@ -1,5 +1,8 @@
 import 'package:chat_translator/components/app_text_field.dart';
 import 'package:chat_translator/components/default_container.dart';
+import 'package:chat_translator/models/user.dart';
+import 'package:chat_translator/providers/auth_provider.dart';
+import 'package:chat_translator/providers/personal_info_provider.dart';
 import 'package:chat_translator/utils/calculators.dart';
 import 'package:chat_translator/utils/color_const.dart';
 import 'package:chat_translator/utils/input_validator.dart';
@@ -9,7 +12,9 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
-  const PersonalInfoScreen({Key? key}) : super(key: key);
+  PersonalInfoScreen({Key? key}) : super(key: key);
+  AuthProvider authProvider = AuthProvider();
+  PersonalInfoProvider personalInfoProvider = PersonalInfoProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +25,8 @@ class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
     TextEditingController dobController = TextEditingController();
     TextEditingController sexValueController = TextEditingController();
     TextEditingController bioController = TextEditingController();
+    DateTime birthDate = DateTime.now();
+    UserData userData;
 
     return Scaffold(
       appBar: AppBar(
@@ -28,8 +35,18 @@ class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          if (formKey.currentState!.validate()) {}
+        onPressed: () async {
+          UserData userData = UserData(id: authProvider.uid() ?? "");
+          userData.name = nameController.text;
+          userData.email = emailController.text;
+          userData.birthDate = birthDate;
+          userData.sex = sexValueController.text;
+          userData.bio = bioController.text;
+          if (formKey.currentState!.validate()) {
+            await personalInfoProvider.setUserData(userData);
+            Navigator.pop(context);
+          }
+          print(userData);
         },
         label: Row(
           children: const [
@@ -85,7 +102,7 @@ class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
                 ),
                 InkWell(
                   onTap: () {
-                    _showDatePicker(context, controller: dobController);
+                    _showDatePicker(context, controller: dobController, birthDate: birthDate);
                   },
                   child: DefaultContainer(
                     padding: const EdgeInsets.all(10),
@@ -144,7 +161,7 @@ class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
     );
   }
 
-  void _showDatePicker(BuildContext context, {required TextEditingController controller}) {
+  void _showDatePicker(BuildContext context, {required TextEditingController controller, required DateTime birthDate}) {
     final dateValue = Calculators().getPrevDate(14);
     // controllerDate = _currentUser().birthDate as DateTime;
     showModalBottomSheet<void>(
@@ -170,6 +187,7 @@ class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
             },
             onSubmit: (Object? value) {
               controller.text = DateFormat('dd MMMM, yyyy').format(value as DateTime);
+              birthDate = value;
 
               // setState(() {
               //   _birthDateController.text = DateFormat('dd MMMM, yyyy').format(value as DateTime);

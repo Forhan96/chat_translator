@@ -43,18 +43,19 @@ class SignInScreen extends StatelessWidget {
               text: "Sign In",
               onPressed: () async {
                 if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-                  await authProvider.signIn(emailController.text.trim(), passwordController.text.trim()).then((result) {
+                  String result = await authProvider.signIn(emailController.text.trim(), passwordController.text.trim());
+                  if (result == "success") {
+                    authProvider.isLogged = true;
                     Navigator.pushReplacementNamed(context, Routes.AUTH_WRAPPER);
-
-                    final snackBar = SnackBar(
-                      backgroundColor: authProvider.isLogged ? kBrandGreen : Colors.red,
-                      content: Text(
-                        result,
-                        textAlign: TextAlign.center,
-                      ),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  });
+                  }
+                  final snackBar = SnackBar(
+                    backgroundColor: authProvider.isLogged ? kBrandGreen : Colors.red,
+                    content: Text(
+                      result,
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 } else {
                   const snackBar = SnackBar(
                     backgroundColor: Colors.red,

@@ -45,19 +45,19 @@ class SignUpScreen extends StatelessWidget {
               text: "Sign Up",
               onPressed: () async {
                 if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-                  await authProvider.signUp(emailController.text.trim(), passwordController.text.trim()).then((result) {
-                    if (result == "success") {
-                      Navigator.pushReplacementNamed(context, Routes.AUTH_WRAPPER);
-                    }
-                    final snackBar = SnackBar(
-                      backgroundColor: authProvider.isLogged ? kBrandGreen : Colors.red,
-                      content: Text(
-                        result,
-                        textAlign: TextAlign.center,
-                      ),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  });
+                  String result = await authProvider.signUp(emailController.text.trim(), passwordController.text.trim());
+
+                  if (result == "success") {
+                    Navigator.pushReplacementNamed(context, Routes.AUTH_WRAPPER);
+                  }
+                  final snackBar = SnackBar(
+                    backgroundColor: authProvider.isLogged ? kBrandGreen : Colors.red,
+                    content: Text(
+                      result,
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 } else {
                   const snackBar = SnackBar(
                     backgroundColor: Colors.red,
