@@ -11,22 +11,50 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
+class PersonalInfoScreen extends StatefulWidget {
   PersonalInfoScreen({Key? key}) : super(key: key);
-  AuthProvider authProvider = AuthProvider();
-  PersonalInfoProvider personalInfoProvider = PersonalInfoProvider();
+
+  @override
+  State<PersonalInfoScreen> createState() => _PersonalInfoScreenState();
+}
+
+class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValidationMixin {
+  late AuthProvider authProvider;
+  late PersonalInfoProvider personalInfoProvider;
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController sexValueController = TextEditingController();
+  TextEditingController bioController = TextEditingController();
+  DateTime? birthDate;
+  UserData? userData;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    authProvider = AuthProvider();
+    personalInfoProvider = PersonalInfoProvider();
+    personalInfoProvider.loading = true;
+    personalInfoProvider.getUserData(authProvider.uid() ?? "");
+    userData = personalInfoProvider.userData;
+    print(userData);
+    nameController.text = userData?.name ?? "";
+    emailController.text = userData?.email ?? "";
+    dobController.text = DateFormat('dd MMMM, yyyy').format(userData?.birthDate ?? DateTime.now());
+    birthDate = userData?.birthDate;
+    sexValueController.text = userData?.sex ?? "";
+    bioController.text = userData?.bio ?? "";
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-
-    TextEditingController nameController = TextEditingController();
-    TextEditingController emailController = TextEditingController();
-    TextEditingController dobController = TextEditingController();
-    TextEditingController sexValueController = TextEditingController();
-    TextEditingController bioController = TextEditingController();
-    DateTime birthDate = DateTime.now();
-    UserData userData;
 
     return Scaffold(
       appBar: AppBar(
@@ -161,7 +189,7 @@ class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
     );
   }
 
-  void _showDatePicker(BuildContext context, {required TextEditingController controller, required DateTime birthDate}) {
+  void _showDatePicker(BuildContext context, {required TextEditingController controller, required DateTime? birthDate}) {
     final dateValue = Calculators().getPrevDate(14);
     // controllerDate = _currentUser().birthDate as DateTime;
     showModalBottomSheet<void>(

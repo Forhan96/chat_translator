@@ -5,11 +5,32 @@ import 'package:flutter/material.dart';
 class PersonalInfoProvider extends ChangeNotifier {
   final RepositoryService _repositoryService = RepositoryService();
 
-  Future<void> setUserData(UserData userData) async {
-    _repositoryService.setUserData(userData);
+  bool _loading = false;
+  UserData? _userData;
+
+  bool get loading => _loading;
+  UserData? get userData => _userData;
+
+  set loading(bool value) {
+    _loading = value;
+    notifyListeners();
   }
 
-  Future<UserData?> getUserData(String uid) async {
-    return _repositoryService.getUserData(uid);
+  set userData(UserData? userData) {
+    _userData = userData;
+    notifyListeners();
+  }
+
+  Future<void> setUserData(UserData userData) async {
+    await _repositoryService.setUserData(userData);
+    _loading = false;
+    notifyListeners();
+  }
+
+  Future<void> getUserData(String uid) async {
+    UserData? userData = await _repositoryService.getUserData(uid);
+    _userData = userData;
+    _loading = false;
+    notifyListeners();
   }
 }
