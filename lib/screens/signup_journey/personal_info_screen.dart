@@ -1,3 +1,4 @@
+import 'package:chat_translator/components/animations/loading_animation.dart';
 import 'package:chat_translator/components/app_text_field.dart';
 import 'package:chat_translator/components/default_container.dart';
 import 'package:chat_translator/models/user.dart';
@@ -40,10 +41,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
   void didChangeDependencies() {
     authProvider = Provider.of<AuthProvider>(context);
     personalInfoProvider = Provider.of<PersonalInfoProvider>(context);
-    // personalInfoProvider.loading = true;
     personalInfoProvider.getUserData(authProvider.uid() ?? "");
     userData = personalInfoProvider.userData;
-    print(userData);
     nameController.text = userData?.name ?? "";
     emailController.text = userData?.email ?? "";
     dobController.text = DateFormat('dd MMMM, yyyy').format(userData?.birthDate ?? DateTime.now());
@@ -60,22 +59,21 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
-        title: Text("Personal Info"),
+        title: const Text("Personal Info"),
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          UserData userData = UserData(id: authProvider.uid() ?? "");
-          userData.name = nameController.text;
-          userData.email = emailController.text;
-          userData.birthDate = birthDate;
-          userData.sex = sexValueController.text;
-          userData.bio = bioController.text;
+          // UserData userData = UserData(id: authProvider.uid() ?? "");
+          userData?.name = nameController.text;
+          userData?.email = emailController.text;
+          userData?.birthDate = birthDate;
+          userData?.sex = sexValueController.text;
+          userData?.bio = bioController.text;
           if (formKey.currentState!.validate()) {
-            await personalInfoProvider.setUserData(userData);
+            await personalInfoProvider.setUserData(userData!);
             Navigator.pop(context);
           }
-          print(userData);
         },
         label: Row(
           children: const [
@@ -86,11 +84,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
         backgroundColor: AppColors.primaryColor,
       ),
       body: personalInfoProvider.loading
-          ? Container(
-              color: AppColors.primaryColor,
-              width: 100,
-              height: 100,
-            )
+          ? Center(child: Loader())
           : SafeArea(
               child: Container(
                 padding: EdgeInsets.symmetric(
