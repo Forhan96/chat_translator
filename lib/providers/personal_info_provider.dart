@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class PersonalInfoProvider extends ChangeNotifier {
   final RepositoryService _repositoryService = RepositoryService();
 
-  bool _loading = false;
+  bool _loading = true;
   UserData? _userData;
 
   bool get loading => _loading;
