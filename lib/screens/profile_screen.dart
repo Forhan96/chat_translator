@@ -16,7 +16,7 @@ class ProfileScreen extends StatelessWidget {
             DefaultContainer(child: Text("Profile")),
             RaisedButton(
               onPressed: () {
-                Navigator.pushReplacementNamed(context, Routes.PERSONAL_INFO_SCREEN);
+                Navigator.pushNamed(context, Routes.PERSONAL_INFO_SCREEN);
               },
               child: Text("Sign out"),
             ),

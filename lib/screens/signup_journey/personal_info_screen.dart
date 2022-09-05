@@ -58,8 +58,13 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
-        title: const Text("Personal Info"),
+        backgroundColor: Colors.white,
+        // elevation: 1,
+        shadowColor: Colors.grey.withOpacity(0.2),
+        title: const Text(
+          "Personal Info",
+          style: TextStyle(color: Colors.grey),
+        ),
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -84,7 +89,9 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
         backgroundColor: AppColors.primaryColor,
       ),
       body: personalInfoProvider.loading
-          ? Center(child: Loader())
+          ? const Center(
+              child: Loader(),
+            )
           : SafeArea(
               child: Container(
                 padding: EdgeInsets.symmetric(
