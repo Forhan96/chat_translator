@@ -162,7 +162,7 @@ class ProfileScreen extends StatelessWidget {
                       Column(
                         children: [
                           Text(
-                            "Natitive",
+                            "Native",
                             style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                           ),
                           Text(
