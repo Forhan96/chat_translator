@@ -15,7 +15,7 @@ class SearchScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text("Search"),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 Provider.of<AuthProvider>(context, listen: false).signOut();
                 Navigator.pushReplacementNamed(context, Routes.AUTH_WRAPPER);

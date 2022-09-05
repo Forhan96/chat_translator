@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text("HOME"),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 Provider.of<AuthProvider>(context, listen: false).signOut();
                 Navigator.pushReplacementNamed(context, Routes.AUTH_WRAPPER);
