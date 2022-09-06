@@ -1,9 +1,9 @@
-import 'package:chat_translator/components/animations/loading_animation.dart';
 import 'package:chat_translator/components/app_text_field.dart';
 import 'package:chat_translator/components/default_container.dart';
 import 'package:chat_translator/models/user.dart';
 import 'package:chat_translator/providers/auth_provider.dart';
 import 'package:chat_translator/providers/personal_info_provider.dart';
+import 'package:chat_translator/router/routes.dart';
 import 'package:chat_translator/utils/calculators.dart';
 import 'package:chat_translator/utils/color_const.dart';
 import 'package:chat_translator/utils/input_validator.dart';
@@ -13,16 +13,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-class PersonalInfoScreen extends StatefulWidget {
+class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
   PersonalInfoScreen({Key? key}) : super(key: key);
-
-  @override
-  State<PersonalInfoScreen> createState() => _PersonalInfoScreenState();
-}
-
-class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValidationMixin {
-  late AuthProvider authProvider;
-  late PersonalInfoProvider personalInfoProvider;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -30,32 +22,13 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
   TextEditingController sexValueController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   // DateTime? birthDate;
-  UserData? userData;
   late Object date;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    authProvider = Provider.of<AuthProvider>(context, listen: false);
-    personalInfoProvider = Provider.of<PersonalInfoProvider>(context, listen: false);
-    personalInfoProvider.getUserData(authProvider.uid() ?? "");
-    userData = personalInfoProvider.userData;
-    nameController.text = userData?.name ?? "";
-    emailController.text = userData?.email ?? "";
-    dobController.text = DateFormat('dd MMMM, yyyy').format(userData?.birthDate ?? DateTime.now());
-    date = userData?.birthDate as Object;
-    sexValueController.text = userData?.sex ?? "";
-    bioController.text = userData?.bio ?? "";
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    PersonalInfoProvider personalInfoProvider = Provider.of<PersonalInfoProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -70,16 +43,16 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          // UserData userData = UserData(id: authProvider.uid() ?? "");
-          userData?.name = nameController.text;
-          userData?.email = emailController.text;
-          userData?.birthDate = date as DateTime?;
-          userData?.sex = sexValueController.text;
-          userData?.bio = bioController.text;
+          UserData? userData = UserData(id: authProvider.uid() ?? "");
+
+          userData.name = nameController.text;
+          userData.email = emailController.text;
+          userData.birthDate = date as DateTime?;
+          userData.sex = sexValueController.text;
+          userData.bio = bioController.text;
           if (formKey.currentState!.validate()) {
-            print(userData);
-            await personalInfoProvider.setUserData(userData!);
-            Navigator.pop(context);
+            await personalInfoProvider.setUserData(userData);
+            Navigator.pushNamed(context, Routes.AUTH_WRAPPER);
           }
         },
         label: Row(
@@ -90,112 +63,108 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
         ),
         backgroundColor: AppColors.primaryColor,
       ),
-      body: personalInfoProvider.loading
-          ? const Center(
-              child: Loader(),
-            )
-          : SafeArea(
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 12.w,
-                  vertical: 10.h,
-                ),
-                child: Form(
-                  key: formKey,
-                  child: ListView(
-                    children: [
-                      DefaultContainer(
-                        padding: const EdgeInsets.all(10),
-                        child: TextInputField(
-                          controller: nameController,
-                          validator: (name) {
-                            if (isValidName(name ?? "")) {
-                              return null;
-                            } else {
-                              return 'Enter a valid name';
-                            }
-                          },
-                          label: 'Name',
-                        ),
-                      ),
-                      SizedBox(
-                        height: 8.h,
-                      ),
-                      DefaultContainer(
-                        padding: const EdgeInsets.all(10),
-                        child: TextInputField(
-                          controller: emailController,
-                          validator: (email) {
-                            if (isEmailValid(email ?? "")) {
-                              return null;
-                            } else {
-                              return 'Enter a valid email address';
-                            }
-                          },
-                          label: 'Email',
-                        ),
-                      ),
-                      SizedBox(
-                        height: 8.h,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          _showDatePicker(context, controller: dobController);
-                        },
-                        child: DefaultContainer(
-                          padding: const EdgeInsets.all(10),
-                          child: TextInputField(
-                            controller: dobController,
-                            validator: (dob) {
-                              if (isNotEmpty(dob ?? "")) {
-                                return null;
-                              } else {
-                                return 'Provide Date of Birth';
-                              }
-                            },
-                            label: 'Date of Birth',
-                            enabled: false,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 8.h,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          _showGenderOptions(context, controller: sexValueController);
-                        },
-                        child: DefaultContainer(
-                          padding: const EdgeInsets.all(10),
-                          child: TextInputField(
-                            controller: sexValueController,
-                            validator: (sex) {
-                              if (isNotEmpty(sex ?? "")) {
-                                return null;
-                              } else {
-                                return 'Select your sex';
-                              }
-                            },
-                            label: 'Sex',
-                            enabled: false,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 8.h,
-                      ),
-                      DefaultContainer(
-                        padding: const EdgeInsets.all(10),
-                        child: TextInputField(
-                          controller: bioController,
-                          label: 'Bio',
-                        ),
-                      ),
-                    ],
+      body: SafeArea(
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 12.w,
+            vertical: 10.h,
+          ),
+          child: Form(
+            key: formKey,
+            child: ListView(
+              children: [
+                DefaultContainer(
+                  padding: const EdgeInsets.all(10),
+                  child: TextInputField(
+                    controller: nameController,
+                    validator: (name) {
+                      if (isValidName(name ?? "")) {
+                        return null;
+                      } else {
+                        return 'Enter a valid name';
+                      }
+                    },
+                    label: 'Name',
                   ),
                 ),
-              ),
+                SizedBox(
+                  height: 8.h,
+                ),
+                DefaultContainer(
+                  padding: const EdgeInsets.all(10),
+                  child: TextInputField(
+                    controller: emailController,
+                    validator: (email) {
+                      if (isEmailValid(email ?? "")) {
+                        return null;
+                      } else {
+                        return 'Enter a valid email address';
+                      }
+                    },
+                    label: 'Email',
+                  ),
+                ),
+                SizedBox(
+                  height: 8.h,
+                ),
+                InkWell(
+                  onTap: () {
+                    _showDatePicker(context, controller: dobController);
+                  },
+                  child: DefaultContainer(
+                    padding: const EdgeInsets.all(10),
+                    child: TextInputField(
+                      controller: dobController,
+                      validator: (dob) {
+                        if (isNotEmpty(dob ?? "")) {
+                          return null;
+                        } else {
+                          return 'Provide Date of Birth';
+                        }
+                      },
+                      label: 'Date of Birth',
+                      enabled: false,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 8.h,
+                ),
+                InkWell(
+                  onTap: () {
+                    _showGenderOptions(context, controller: sexValueController);
+                  },
+                  child: DefaultContainer(
+                    padding: const EdgeInsets.all(10),
+                    child: TextInputField(
+                      controller: sexValueController,
+                      validator: (sex) {
+                        if (isNotEmpty(sex ?? "")) {
+                          return null;
+                        } else {
+                          return 'Select your sex';
+                        }
+                      },
+                      label: 'Sex',
+                      enabled: false,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 8.h,
+                ),
+                DefaultContainer(
+                  padding: const EdgeInsets.all(10),
+                  child: TextInputField(
+                    controller: bioController,
+                    label: 'Bio',
+                  ),
+                ),
+              ],
             ),
+          ),
+        ),
+      ),
     );
   }
 

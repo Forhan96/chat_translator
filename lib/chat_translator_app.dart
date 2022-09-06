@@ -1,8 +1,11 @@
+import 'package:chat_translator/models/user.dart';
 import 'package:chat_translator/providers/auth_provider.dart';
+import 'package:chat_translator/providers/personal_info_provider.dart';
 import 'package:chat_translator/router/router_helper.dart';
 import 'package:chat_translator/router/routes.dart';
 import 'package:chat_translator/screens/home_screen.dart';
 import 'package:chat_translator/screens/sign_in_screen.dart';
+import 'package:chat_translator/screens/signup_journey/personal_info_screen.dart';
 import 'package:chat_translator/screens/signup_journey/verify_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,7 +28,6 @@ class _ChatTranslatorAppState extends State<ChatTranslatorApp> {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider _authProvider = Provider.of<AuthProvider>(context);
     return ScreenUtilInit(
       designSize: const Size(414, 896),
       builder: (context, child) => MaterialApp(
@@ -35,7 +37,6 @@ class _ChatTranslatorAppState extends State<ChatTranslatorApp> {
           primarySwatch: Colors.blue,
         ),
         home: const AuthenticationWrapper(),
-        // home: _authProvider.isUserSignedIn() ? HomeScreen() : SignInScreen(),
         onGenerateRoute: RouterHelper.router.generator,
         initialRoute: Routes.SPLASH_SCREEN,
       ),
@@ -48,9 +49,15 @@ class AuthenticationWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider _authProvider = Provider.of<AuthProvider>(context, listen: false);
-    if (_authProvider.isUserSignedIn()) {
-      if (_authProvider.isVerified()) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    PersonalInfoProvider personalInfoProvider = Provider.of(context, listen: false);
+    if (authProvider.isUserSignedIn()) {
+      if (authProvider.isVerified()) {
+        personalInfoProvider.getUserData(authProvider.uid() ?? "");
+        UserData? userData = personalInfoProvider.userData;
+        if (userData == null) {
+          return PersonalInfoScreen();
+        }
         return HomeScreen();
       } else {
         return VerifyScreen();

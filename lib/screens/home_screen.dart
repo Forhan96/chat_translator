@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: DefaultNavBar(
+      bottomNavigationBar: const DefaultNavBar(
         initialActiveIndex: 0,
       ),
     );

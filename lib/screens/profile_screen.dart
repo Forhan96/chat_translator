@@ -40,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, Routes.PERSONAL_INFO_SCREEN);
+              Navigator.pushNamed(context, Routes.EDIT_PROFILE_SCREEN);
             },
             icon: Icon(
               Icons.edit,
