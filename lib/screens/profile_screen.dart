@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat_translator/components/animations/loading_animation.dart';
 import 'package:chat_translator/components/default_container.dart';
 import 'package:chat_translator/components/default_navbar.dart';
 import 'package:chat_translator/providers/auth_provider.dart';
@@ -16,9 +17,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
     PersonalInfoProvider personalInfoProvider = Provider.of<PersonalInfoProvider>(context);
-    // personalInfoProvider.getUserData(authProvider.uid() ?? "");
+    personalInfoProvider.getUserData(authProvider.uid() ?? "");
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -53,146 +54,148 @@ class ProfileScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              DefaultContainer(
+        child: personalInfoProvider.loading
+            ? Center(child: Loader())
+            : Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CircleAvatar(
-                      radius: 32,
-                      backgroundColor: AppColors.primaryColor,
-                      child: ClipOval(
-                        child: CachedNetworkImage(
-                          imageUrl: "https://picsum.photos/200",
-                          fit: BoxFit.cover,
-                          width: 56,
-                          height: 56,
+                    DefaultContainer(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 32,
+                            backgroundColor: AppColors.primaryColor,
+                            child: ClipOval(
+                              child: CachedNetworkImage(
+                                imageUrl: "https://picsum.photos/200",
+                                fit: BoxFit.cover,
+                                width: 56,
+                                height: 56,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 12.w,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            // mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                height: 6.h,
+                              ),
+                              Text(
+                                personalInfoProvider.userData?.name ?? "",
+                                style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: 6.h,
+                              ),
+                              Text(
+                                personalInfoProvider.userData?.email ?? "",
+                                style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
+                              ),
+                              SizedBox(
+                                height: 6.h,
+                              ),
+                              Text(
+                                personalInfoProvider.userData?.bio ?? "",
+                                style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 6.h,
+                    ),
+                    DefaultContainer(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                      child: IntrinsicHeight(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  "Date of Birth",
+                                  style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
+                                ),
+                                Text(
+                                  DateFormat('dd MMMM, yyyy').format(personalInfoProvider.userData?.birthDate ?? DateTime.now()),
+                                  style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            VerticalDivider(
+                              color: Colors.grey,
+                              thickness: 1,
+                            ),
+                            Column(
+                              children: [
+                                Text(
+                                  "Sex",
+                                  style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
+                                ),
+                                Text(
+                                  personalInfoProvider.userData?.sex ?? "",
+                                  style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ),
                     SizedBox(
-                      width: 12.w,
+                      height: 6.h,
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      // mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          height: 6.h,
+                    DefaultContainer(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                      child: IntrinsicHeight(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  "Native",
+                                  style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
+                                ),
+                                Text(
+                                  "Bengali",
+                                  style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            VerticalDivider(
+                              color: Colors.grey,
+                              thickness: 1,
+                            ),
+                            Column(
+                              children: [
+                                Text(
+                                  "Learning",
+                                  style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
+                                ),
+                                Text(
+                                  "English",
+                                  style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        Text(
-                          personalInfoProvider.userData?.name ?? "",
-                          style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          personalInfoProvider.userData?.email ?? "",
-                          style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          personalInfoProvider.userData?.bio ?? "",
-                          style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
-                        ),
-                      ],
-                    )
+                      ),
+                    ),
                   ],
                 ),
               ),
-              SizedBox(
-                height: 6.h,
-              ),
-              DefaultContainer(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                child: IntrinsicHeight(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            "Date of Birth",
-                            style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
-                          ),
-                          Text(
-                            DateFormat('dd MMMM, yyyy').format(personalInfoProvider.userData?.birthDate ?? DateTime.now()),
-                            style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      VerticalDivider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            "Sex",
-                            style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
-                          ),
-                          Text(
-                            personalInfoProvider.userData?.sex ?? "",
-                            style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 6.h,
-              ),
-              DefaultContainer(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                child: IntrinsicHeight(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            "Native",
-                            style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
-                          ),
-                          Text(
-                            "Bengali",
-                            style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      VerticalDivider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            "Learning",
-                            style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
-                          ),
-                          Text(
-                            "English",
-                            style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
       bottomNavigationBar: DefaultNavBar(
         initialActiveIndex: 2,

@@ -29,8 +29,9 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
   TextEditingController dobController = TextEditingController();
   TextEditingController sexValueController = TextEditingController();
   TextEditingController bioController = TextEditingController();
-  DateTime? birthDate;
+  // DateTime? birthDate;
   UserData? userData;
+  late Object date;
 
   @override
   void initState() {
@@ -39,14 +40,14 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
 
   @override
   void didChangeDependencies() {
-    authProvider = Provider.of<AuthProvider>(context);
-    personalInfoProvider = Provider.of<PersonalInfoProvider>(context);
+    authProvider = Provider.of<AuthProvider>(context, listen: false);
+    personalInfoProvider = Provider.of<PersonalInfoProvider>(context, listen: false);
     personalInfoProvider.getUserData(authProvider.uid() ?? "");
     userData = personalInfoProvider.userData;
     nameController.text = userData?.name ?? "";
     emailController.text = userData?.email ?? "";
     dobController.text = DateFormat('dd MMMM, yyyy').format(userData?.birthDate ?? DateTime.now());
-    birthDate = userData?.birthDate;
+    date = userData?.birthDate as Object;
     sexValueController.text = userData?.sex ?? "";
     bioController.text = userData?.bio ?? "";
     super.didChangeDependencies();
@@ -72,10 +73,11 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
           // UserData userData = UserData(id: authProvider.uid() ?? "");
           userData?.name = nameController.text;
           userData?.email = emailController.text;
-          userData?.birthDate = birthDate;
+          userData?.birthDate = date as DateTime?;
           userData?.sex = sexValueController.text;
           userData?.bio = bioController.text;
           if (formKey.currentState!.validate()) {
+            print(userData);
             await personalInfoProvider.setUserData(userData!);
             Navigator.pop(context);
           }
@@ -138,7 +140,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
                       ),
                       InkWell(
                         onTap: () {
-                          _showDatePicker(context, controller: dobController, birthDate: birthDate);
+                          _showDatePicker(context, controller: dobController);
                         },
                         child: DefaultContainer(
                           padding: const EdgeInsets.all(10),
@@ -197,7 +199,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
     );
   }
 
-  void _showDatePicker(BuildContext context, {required TextEditingController controller, required DateTime? birthDate}) {
+  void _showDatePicker(BuildContext context, {required TextEditingController controller}) {
     final dateValue = Calculators().getPrevDate(14);
     // controllerDate = _currentUser().birthDate as DateTime;
     showModalBottomSheet<void>(
@@ -223,7 +225,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
             },
             onSubmit: (Object? value) {
               controller.text = DateFormat('dd MMMM, yyyy').format(value as DateTime);
-              birthDate = value;
+              date = value;
               Navigator.pop(context);
             },
             headerStyle: DateRangePickerHeaderStyle(
