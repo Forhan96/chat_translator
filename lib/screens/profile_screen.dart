@@ -18,7 +18,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     PersonalInfoProvider personalInfoProvider = Provider.of<PersonalInfoProvider>(context);
-    personalInfoProvider.getUserData(authProvider.uid() ?? "");
+    // personalInfoProvider.getUserData(authProvider.uid() ?? "");
 
     return Scaffold(
       backgroundColor: Colors.white,
