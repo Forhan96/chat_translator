@@ -224,12 +224,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with InputValid
             onSubmit: (Object? value) {
               controller.text = DateFormat('dd MMMM, yyyy').format(value as DateTime);
               birthDate = value;
-
-              // setState(() {
-              //   _birthDateController.text = DateFormat('dd MMMM, yyyy').format(value as DateTime);
-              //   controllerDate = value;
-              //   // updateData.add({"field": "birthDate", "value": value});
-              // });
               Navigator.pop(context);
             },
             headerStyle: DateRangePickerHeaderStyle(

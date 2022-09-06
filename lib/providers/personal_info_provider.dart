@@ -29,6 +29,7 @@ class PersonalInfoProvider extends ChangeNotifier {
 
   Future<void> getUserData(String uid) async {
     UserData? userData = await _repositoryService.getUserData(uid);
+    print(userData);
     _userData = userData;
     _loading = false;
     notifyListeners();

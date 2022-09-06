@@ -124,8 +124,7 @@ class ProfileScreen extends StatelessWidget {
                             style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                           ),
                           Text(
-                            DateFormat('dd MMMM, yyyy')
-                                .format(personalInfoProvider.userData?.birthDate ?? DateTime.now()),
+                            DateFormat('dd MMMM, yyyy').format(personalInfoProvider.userData?.birthDate ?? DateTime.now()),
                             style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ],
