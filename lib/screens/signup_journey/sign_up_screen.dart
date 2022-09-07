@@ -7,23 +7,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class SignInScreen extends StatelessWidget {
-  SignInScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatelessWidget {
+  SignUpScreen({Key? key}) : super(key: key);
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // SizedBox(
-            //   height: 100,
-            // ),
             DefaultTextField(
               controller: emailController,
               hintText: "Email",
@@ -35,17 +33,21 @@ class SignInScreen extends StatelessWidget {
               controller: passwordController,
               hintText: "Password",
               obscureText: true,
+              // suffixIcon: IconButton(
+              //   onPressed: () {},
+              //   icon: Icon(Icons.remove_red_eye),
+              // ),
             ),
             SizedBox(
               height: 16.h,
             ),
             DefaultButton(
-              text: "Sign In",
+              text: "Sign Up",
               onPressed: () async {
                 if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-                  String result = await authProvider.signIn(emailController.text.trim(), passwordController.text.trim());
+                  String result = await authProvider.signUp(emailController.text.trim(), passwordController.text.trim());
+
                   if (result == "success") {
-                    authProvider.isLogged = true;
                     Navigator.pushReplacementNamed(context, Routes.AUTH_WRAPPER);
                   }
                   final snackBar = SnackBar(
@@ -74,13 +76,13 @@ class SignInScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Don't have an account?"),
+                const Text("Already have an account?"),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, Routes.SIGN_UP_SCREEN);
+                    Navigator.pushNamed(context, Routes.SIGN_IN_SCREEN);
                   },
                   child: const Text(
-                    "Sign Up",
+                    "Sign In",
                     style: TextStyle(color: kBrandGreen),
                   ),
                 ),

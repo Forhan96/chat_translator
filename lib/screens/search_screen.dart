@@ -4,8 +4,8 @@ import 'package:chat_translator/router/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class SearchScreen extends StatelessWidget {
+  const SearchScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("HOME"),
+            Text("Search"),
             ElevatedButton(
               onPressed: () {
                 Provider.of<AuthProvider>(context, listen: false).signOut();
@@ -25,8 +25,8 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const DefaultNavBar(
-        initialActiveIndex: 0,
+      bottomNavigationBar: DefaultNavBar(
+        initialActiveIndex: 1,
       ),
     );
   }
