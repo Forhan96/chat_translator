@@ -60,7 +60,6 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
         print(userData);
         if (userData == null) {
           Navigator.pushReplacementNamed(context, Routes.PERSONAL_INFO_SCREEN);
-          print("im here----------");
         } else {
           Navigator.pushReplacementNamed(context, Routes.HOME_SCREEN);
         }
