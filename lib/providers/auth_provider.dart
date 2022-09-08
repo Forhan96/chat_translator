@@ -1,16 +1,21 @@
 import 'dart:async';
 
+import 'package:chat_translator/models/user.dart';
 import 'package:chat_translator/services/auth_service.dart';
+import 'package:chat_translator/services/repository_service.dart';
 import 'package:flutter/material.dart';
 
 class AuthProvider with ChangeNotifier {
   final AuthService _authService = AuthService();
+  final RepositoryService _repositoryService = RepositoryService();
 
   bool _isLogged = false;
   bool _loading = false;
+  UserData? _userData;
 
   bool get isLogged => _isLogged;
   bool get loading => _loading;
+  UserData? get userData => _userData;
 
   set isLogged(bool value) {
     _isLogged = value;
@@ -19,6 +24,11 @@ class AuthProvider with ChangeNotifier {
 
   set loading(bool value) {
     _loading = value;
+    notifyListeners();
+  }
+
+  set userData(UserData? userData) {
+    _userData = userData;
     notifyListeners();
   }
 
@@ -46,5 +56,18 @@ class AuthProvider with ChangeNotifier {
 
   String? uid() {
     return _authService.uid();
+  }
+
+  Future<void> setUserData(UserData userData) async {
+    await _repositoryService.setUserData(userData);
+    _loading = false;
+    notifyListeners();
+  }
+
+  Future<void> getUserData(String uid) async {
+    UserData? userData = await _repositoryService.getUserData(uid);
+    _userData = userData;
+    _loading = false;
+    notifyListeners();
   }
 }

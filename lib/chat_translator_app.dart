@@ -1,12 +1,8 @@
+import 'package:chat_translator/components/animations/loading_animation.dart';
 import 'package:chat_translator/models/user.dart';
 import 'package:chat_translator/providers/auth_provider.dart';
-import 'package:chat_translator/providers/personal_info_provider.dart';
 import 'package:chat_translator/router/router_helper.dart';
 import 'package:chat_translator/router/routes.dart';
-import 'package:chat_translator/screens/home_screen.dart';
-import 'package:chat_translator/screens/sign_in_screen.dart';
-import 'package:chat_translator/screens/signup_journey/personal_info_screen.dart';
-import 'package:chat_translator/screens/signup_journey/verify_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -44,26 +40,49 @@ class _ChatTranslatorAppState extends State<ChatTranslatorApp> {
   }
 }
 
-class AuthenticationWrapper extends StatelessWidget {
+class AuthenticationWrapper extends StatefulWidget {
   const AuthenticationWrapper({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<AuthenticationWrapper> createState() => _AuthenticationWrapperState();
+}
+
+class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
+  void checkState() async {
     AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
-    PersonalInfoProvider personalInfoProvider = Provider.of(context, listen: false);
-    if (authProvider.isUserSignedIn()) {
-      if (authProvider.isVerified()) {
-        personalInfoProvider.getUserData(authProvider.uid() ?? "");
-        UserData? userData = personalInfoProvider.userData;
+    bool isLoggedIn = await authProvider.isUserSignedIn();
+    bool isVerified = await authProvider.isVerified();
+
+    if (isLoggedIn) {
+      if (isVerified) {
+        authProvider.getUserData(authProvider.uid() ?? "");
+        UserData? userData = authProvider.userData;
         if (userData == null) {
-          return PersonalInfoScreen();
+          Navigator.pushReplacementNamed(context, Routes.PERSONAL_INFO_SCREEN);
         }
-        return HomeScreen();
+        Navigator.pushReplacementNamed(context, Routes.HOME_SCREEN);
       } else {
-        return VerifyScreen();
+        Navigator.pushReplacementNamed(context, Routes.VERIFY_SCREEN);
       }
     } else {
-      return SignInScreen();
+      Navigator.pushReplacementNamed(context, Routes.SIGN_IN_SCREEN);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 1), () {
+      checkState();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Loader(),
+      ),
+    );
   }
 }

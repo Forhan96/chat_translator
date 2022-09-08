@@ -1,10 +1,5 @@
-import 'dart:async';
-
-import 'package:chat_translator/providers/auth_provider.dart';
-import 'package:chat_translator/router/routes.dart';
 import 'package:chat_translator/utils/color_const.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -14,16 +9,34 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  late AuthProvider _authProvider;
-
-  @override
-  void initState() {
-    super.initState();
-    _authProvider = Provider.of<AuthProvider>(context, listen: false);
-    Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, Routes.AUTH_WRAPPER);
-    });
-  }
+  // void checkState() async {
+  //   AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+  //   bool isLoggedIn = await authProvider.isUserSignedIn();
+  //   bool isVerified = await authProvider.isVerified();
+  //
+  //   if (isLoggedIn) {
+  //     if (isVerified) {
+  //       authProvider.getUserData(authProvider.uid() ?? "");
+  //       UserData? userData = authProvider.userData;
+  //       if (userData == null) {
+  //         Navigator.pushReplacementNamed(context, Routes.PERSONAL_INFO_SCREEN);
+  //       }
+  //       Navigator.pushReplacementNamed(context, Routes.HOME_SCREEN);
+  //     } else {
+  //       Navigator.pushReplacementNamed(context, Routes.VERIFY_SCREEN);
+  //     }
+  //   } else {
+  //     Navigator.pushReplacementNamed(context, Routes.SIGN_IN_SCREEN);
+  //   }
+  // }
+  //
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   Future.delayed(Duration(seconds: 3), () {
+  //     checkState();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
