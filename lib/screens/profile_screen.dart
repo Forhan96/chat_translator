@@ -168,7 +168,7 @@ class ProfileScreen extends StatelessWidget {
                                   style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                                 ),
                                 Text(
-                                  "Bengali",
+                                  personalInfoProvider.userData?.nativeLanguage ?? "",
                                   style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                               ],
@@ -184,7 +184,7 @@ class ProfileScreen extends StatelessWidget {
                                   style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                                 ),
                                 Text(
-                                  "English",
+                                  personalInfoProvider.userData?.learningLanguage ?? "",
                                   style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                               ],

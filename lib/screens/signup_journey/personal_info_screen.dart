@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:selection_dialogs/country_selector_dialog.dart';
+import 'package:selection_dialogs/language_selector_dialog.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
@@ -21,6 +23,9 @@ class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
   TextEditingController dobController = TextEditingController();
   TextEditingController sexValueController = TextEditingController();
   TextEditingController bioController = TextEditingController();
+  TextEditingController countryController = TextEditingController();
+  TextEditingController nativeLangController = TextEditingController();
+  TextEditingController learningLangController = TextEditingController();
   // DateTime? birthDate;
   late Object date;
 
@@ -50,6 +55,9 @@ class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
           userData.birthDate = date as DateTime?;
           userData.sex = sexValueController.text;
           userData.bio = bioController.text;
+          userData.country = countryController.text;
+          userData.nativeLanguage = nativeLangController.text;
+          userData.learningLanguage = learningLangController.text;
           if (formKey.currentState!.validate()) {
             await personalInfoProvider.setUserData(userData);
             Navigator.pushNamed(context, Routes.AUTH_WRAPPER);
@@ -75,89 +83,199 @@ class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
               children: [
                 DefaultContainer(
                   padding: const EdgeInsets.all(10),
-                  child: TextInputField(
-                    controller: nameController,
-                    validator: (name) {
-                      if (isValidName(name ?? "")) {
-                        return null;
-                      } else {
-                        return 'Enter a valid name';
-                      }
-                    },
-                    label: 'Name',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      DefaultContainer(
+                        padding: const EdgeInsets.all(10),
+                        child: TextInputField(
+                          controller: nameController,
+                          validator: (name) {
+                            if (isValidName(name ?? "")) {
+                              return null;
+                            } else {
+                              return 'Enter a valid name';
+                            }
+                          },
+                          label: 'Name',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8.h,
+                      ),
+                      DefaultContainer(
+                        padding: const EdgeInsets.all(10),
+                        child: TextInputField(
+                          controller: emailController,
+                          validator: (email) {
+                            if (isEmailValid(email ?? "")) {
+                              return null;
+                            } else {
+                              return 'Enter a valid email address';
+                            }
+                          },
+                          label: 'Email',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8.h,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          _showDatePicker(context, controller: dobController);
+                        },
+                        child: DefaultContainer(
+                          padding: const EdgeInsets.all(10),
+                          child: TextInputField(
+                            controller: dobController,
+                            validator: (dob) {
+                              if (isNotEmpty(dob ?? "")) {
+                                return null;
+                              } else {
+                                return 'Provide Date of Birth';
+                              }
+                            },
+                            label: 'Date of Birth',
+                            enabled: false,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8.h,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          _showGenderOptions(context, controller: sexValueController);
+                        },
+                        child: DefaultContainer(
+                          padding: const EdgeInsets.all(10),
+                          child: TextInputField(
+                            controller: sexValueController,
+                            validator: (sex) {
+                              if (isNotEmpty(sex ?? "")) {
+                                return null;
+                              } else {
+                                return 'Select your sex';
+                              }
+                            },
+                            label: 'Sex',
+                            enabled: false,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8.h,
+                      ),
+                      DefaultContainer(
+                        padding: const EdgeInsets.all(10),
+                        child: TextInputField(
+                          controller: bioController,
+                          label: 'Bio',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(
-                  height: 8.h,
+                  height: 16.h,
                 ),
                 DefaultContainer(
                   padding: const EdgeInsets.all(10),
-                  child: TextInputField(
-                    controller: emailController,
-                    validator: (email) {
-                      if (isEmailValid(email ?? "")) {
-                        return null;
-                      } else {
-                        return 'Enter a valid email address';
-                      }
-                    },
-                    label: 'Email',
-                  ),
-                ),
-                SizedBox(
-                  height: 8.h,
-                ),
-                InkWell(
-                  onTap: () {
-                    _showDatePicker(context, controller: dobController);
-                  },
-                  child: DefaultContainer(
-                    padding: const EdgeInsets.all(10),
-                    child: TextInputField(
-                      controller: dobController,
-                      validator: (dob) {
-                        if (isNotEmpty(dob ?? "")) {
-                          return null;
-                        } else {
-                          return 'Provide Date of Birth';
-                        }
-                      },
-                      label: 'Date of Birth',
-                      enabled: false,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 8.h,
-                ),
-                InkWell(
-                  onTap: () {
-                    _showGenderOptions(context, controller: sexValueController);
-                  },
-                  child: DefaultContainer(
-                    padding: const EdgeInsets.all(10),
-                    child: TextInputField(
-                      controller: sexValueController,
-                      validator: (sex) {
-                        if (isNotEmpty(sex ?? "")) {
-                          return null;
-                        } else {
-                          return 'Select your sex';
-                        }
-                      },
-                      label: 'Sex',
-                      enabled: false,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 8.h,
-                ),
-                DefaultContainer(
-                  padding: const EdgeInsets.all(10),
-                  child: TextInputField(
-                    controller: bioController,
-                    label: 'Bio',
+                  child: Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CountrySelectionDialog(onTap: (item) {
+                                countryController.text = item.name;
+                              });
+                            },
+                          );
+                        },
+                        child: DefaultContainer(
+                          padding: const EdgeInsets.all(10),
+                          child: TextInputField(
+                            controller: countryController,
+                            validator: (country) {
+                              if (isNotEmpty(country ?? "")) {
+                                return null;
+                              } else {
+                                return 'Select your country';
+                              }
+                            },
+                            label: 'Country',
+                            enabled: false,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8.h,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return LanguageSelector(
+                                onTap: (language) {
+                                  nativeLangController.text = language.name;
+                                },
+                              );
+                            },
+                          );
+                        },
+                        child: DefaultContainer(
+                          padding: const EdgeInsets.all(10),
+                          child: TextInputField(
+                            controller: nativeLangController,
+                            validator: (language) {
+                              if (isNotEmpty(language ?? "")) {
+                                return null;
+                              } else {
+                                return 'Select your native language';
+                              }
+                            },
+                            label: 'Native Language',
+                            enabled: false,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8.h,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return LanguageSelector(
+                                onTap: (language) {
+                                  learningLangController.text = language.name;
+                                },
+                              );
+                            },
+                          );
+                        },
+                        child: DefaultContainer(
+                          padding: const EdgeInsets.all(10),
+                          child: TextInputField(
+                            controller: learningLangController,
+                            validator: (language) {
+                              if (isNotEmpty(language ?? "")) {
+                                return null;
+                              } else {
+                                return 'Select learning language';
+                              }
+                            },
+                            label: 'Learning Language',
+                            enabled: false,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

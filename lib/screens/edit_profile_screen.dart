@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:selection_dialogs/country_selector_dialog.dart';
+import 'package:selection_dialogs/language_selector_dialog.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -29,6 +31,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
   TextEditingController dobController = TextEditingController();
   TextEditingController sexValueController = TextEditingController();
   TextEditingController bioController = TextEditingController();
+  TextEditingController countryController = TextEditingController();
+  TextEditingController nativeLangController = TextEditingController();
+  TextEditingController learningLangController = TextEditingController();
   // DateTime? birthDate;
   UserData? userData;
   late Object date;
@@ -51,6 +56,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
       date = userData?.birthDate as Object;
       sexValueController.text = userData?.sex ?? "";
       bioController.text = userData?.bio ?? "";
+      countryController.text = userData?.country ?? "";
+      nativeLangController.text = userData?.nativeLanguage ?? "";
+      learningLangController.text = userData?.learningLanguage ?? "";
     }
     super.didChangeDependencies();
   }
@@ -78,6 +86,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
           userData?.birthDate = date as DateTime?;
           userData?.sex = sexValueController.text;
           userData?.bio = bioController.text;
+          userData?.country = countryController.text;
+          userData?.nativeLanguage = nativeLangController.text;
+          userData?.learningLanguage = learningLangController.text;
+
           if (formKey.currentState!.validate()) {
             print(userData);
             await personalInfoProvider.setUserData(userData!);
@@ -211,20 +223,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
                           children: [
                             InkWell(
                               onTap: () {
-                                _showDatePicker(context, controller: dobController);
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CountrySelectionDialog(onTap: (item) {
+                                      countryController.text = item.name;
+                                    });
+                                  },
+                                );
                               },
                               child: DefaultContainer(
                                 padding: const EdgeInsets.all(10),
                                 child: TextInputField(
-                                  controller: dobController,
-                                  validator: (dob) {
-                                    if (isNotEmpty(dob ?? "")) {
+                                  controller: countryController,
+                                  validator: (country) {
+                                    if (isNotEmpty(country ?? "")) {
                                       return null;
                                     } else {
-                                      return 'Provide Date of Birth';
+                                      return 'Select your country';
                                     }
                                   },
-                                  label: 'Date of Birth',
+                                  label: 'Country',
                                   enabled: false,
                                 ),
                               ),
@@ -234,20 +253,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
                             ),
                             InkWell(
                               onTap: () {
-                                _showDatePicker(context, controller: dobController);
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return LanguageSelector(
+                                      onTap: (language) {
+                                        nativeLangController.text = language.name;
+                                      },
+                                    );
+                                  },
+                                );
                               },
                               child: DefaultContainer(
                                 padding: const EdgeInsets.all(10),
                                 child: TextInputField(
-                                  controller: dobController,
-                                  validator: (dob) {
-                                    if (isNotEmpty(dob ?? "")) {
+                                  controller: nativeLangController,
+                                  validator: (language) {
+                                    if (isNotEmpty(language ?? "")) {
                                       return null;
                                     } else {
-                                      return 'Provide Date of Birth';
+                                      return 'Select your native language';
                                     }
                                   },
-                                  label: 'Date of Birth',
+                                  label: 'Native Language',
                                   enabled: false,
                                 ),
                               ),
@@ -257,20 +285,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
                             ),
                             InkWell(
                               onTap: () {
-                                _showDatePicker(context, controller: dobController);
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return LanguageSelector(
+                                      onTap: (language) {
+                                        learningLangController.text = language.name;
+                                      },
+                                    );
+                                  },
+                                );
                               },
                               child: DefaultContainer(
                                 padding: const EdgeInsets.all(10),
                                 child: TextInputField(
-                                  controller: dobController,
-                                  validator: (dob) {
-                                    if (isNotEmpty(dob ?? "")) {
+                                  controller: learningLangController,
+                                  validator: (language) {
+                                    if (isNotEmpty(language ?? "")) {
                                       return null;
                                     } else {
-                                      return 'Provide Date of Birth';
+                                      return 'Select learning language';
                                     }
                                   },
-                                  label: 'Date of Birth',
+                                  label: 'Learning Language',
                                   enabled: false,
                                 ),
                               ),
