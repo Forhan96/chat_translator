@@ -57,7 +57,6 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
       if (isVerified) {
         await authProvider.getUserData(authProvider.uid() ?? "");
         UserData? userData = authProvider.userData;
-        print(userData);
         if (userData == null) {
           Navigator.pushReplacementNamed(context, Routes.PERSONAL_INFO_SCREEN);
         } else {
