@@ -3,7 +3,6 @@ import 'package:chat_translator/components/app_text_field.dart';
 import 'package:chat_translator/components/default_container.dart';
 import 'package:chat_translator/models/user.dart';
 import 'package:chat_translator/providers/auth_provider.dart';
-import 'package:chat_translator/providers/personal_info_provider.dart';
 import 'package:chat_translator/utils/calculators.dart';
 import 'package:chat_translator/utils/color_const.dart';
 import 'package:chat_translator/utils/input_validator.dart';
@@ -24,7 +23,7 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> with InputValidationMixin {
   late AuthProvider authProvider;
-  late PersonalInfoProvider personalInfoProvider;
+  // late PersonalInfoProvider personalInfoProvider;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -46,9 +45,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
   @override
   void didChangeDependencies() {
     authProvider = Provider.of<AuthProvider>(context, listen: false);
-    personalInfoProvider = Provider.of<PersonalInfoProvider>(context, listen: false);
-    personalInfoProvider.getUserData(authProvider.uid() ?? "");
-    userData = personalInfoProvider.userData;
+    // personalInfoProvider = Provider.of<PersonalInfoProvider>(context, listen: false);
+    authProvider.getUserData(authProvider.uid() ?? "");
+    userData = authProvider.userData;
     if (userData != null) {
       nameController.text = userData?.name ?? "";
       emailController.text = userData?.email ?? "";
@@ -92,7 +91,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
 
           if (formKey.currentState!.validate()) {
             print(userData);
-            await personalInfoProvider.setUserData(userData!);
+            await authProvider.setUserData(userData!);
             Navigator.pop(context);
           }
         },
@@ -104,7 +103,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
         ),
         backgroundColor: AppColors.primaryColor,
       ),
-      body: personalInfoProvider.loading
+      body: authProvider.loading
           ? const Center(
               child: Loader(),
             )

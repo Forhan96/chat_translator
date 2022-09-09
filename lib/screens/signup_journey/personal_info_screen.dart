@@ -2,7 +2,6 @@ import 'package:chat_translator/components/app_text_field.dart';
 import 'package:chat_translator/components/default_container.dart';
 import 'package:chat_translator/models/user.dart';
 import 'package:chat_translator/providers/auth_provider.dart';
-import 'package:chat_translator/providers/personal_info_provider.dart';
 import 'package:chat_translator/router/routes.dart';
 import 'package:chat_translator/utils/calculators.dart';
 import 'package:chat_translator/utils/color_const.dart';
@@ -33,7 +32,7 @@ class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
-    PersonalInfoProvider personalInfoProvider = Provider.of<PersonalInfoProvider>(context, listen: false);
+    // PersonalInfoProvider personalInfoProvider = Provider.of<PersonalInfoProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +58,7 @@ class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
           userData.nativeLanguage = nativeLangController.text;
           userData.learningLanguage = learningLangController.text;
           if (formKey.currentState!.validate()) {
-            await personalInfoProvider.setUserData(userData);
+            await authProvider.setUserData(userData);
             Navigator.pushNamed(context, Routes.AUTH_WRAPPER);
           }
         },

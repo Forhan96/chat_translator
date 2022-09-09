@@ -3,7 +3,6 @@ import 'package:chat_translator/components/animations/loading_animation.dart';
 import 'package:chat_translator/components/default_container.dart';
 import 'package:chat_translator/components/default_navbar.dart';
 import 'package:chat_translator/providers/auth_provider.dart';
-import 'package:chat_translator/providers/personal_info_provider.dart';
 import 'package:chat_translator/router/routes.dart';
 import 'package:chat_translator/utils/color_const.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +16,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
-    PersonalInfoProvider personalInfoProvider = Provider.of<PersonalInfoProvider>(context);
-    personalInfoProvider.getUserData(authProvider.uid() ?? "");
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    // PersonalInfoProvider personalInfoProvider = Provider.of<PersonalInfoProvider>(context);
+    authProvider.getUserData(authProvider.uid() ?? "");
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -54,7 +53,7 @@ class ProfileScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: personalInfoProvider.loading
+        child: authProvider.loading
             ? Center(child: Loader())
             : Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
@@ -89,21 +88,21 @@ class ProfileScreen extends StatelessWidget {
                                 height: 6.h,
                               ),
                               Text(
-                                personalInfoProvider.userData?.name ?? "",
+                                authProvider.userData?.name ?? "",
                                 style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(
                                 height: 6.h,
                               ),
                               Text(
-                                personalInfoProvider.userData?.email ?? "",
+                                authProvider.userData?.email ?? "",
                                 style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                               ),
                               SizedBox(
                                 height: 6.h,
                               ),
                               Text(
-                                personalInfoProvider.userData?.bio ?? "",
+                                authProvider.userData?.bio ?? "",
                                 style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                               ),
                             ],
@@ -127,7 +126,7 @@ class ProfileScreen extends StatelessWidget {
                                   style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                                 ),
                                 Text(
-                                  DateFormat('dd MMMM, yyyy').format(personalInfoProvider.userData?.birthDate ?? DateTime.now()),
+                                  DateFormat('dd MMMM, yyyy').format(authProvider.userData?.birthDate ?? DateTime.now()),
                                   style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                               ],
@@ -143,7 +142,7 @@ class ProfileScreen extends StatelessWidget {
                                   style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                                 ),
                                 Text(
-                                  personalInfoProvider.userData?.sex ?? "",
+                                  authProvider.userData?.sex ?? "",
                                   style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                               ],
@@ -168,7 +167,7 @@ class ProfileScreen extends StatelessWidget {
                                   style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                                 ),
                                 Text(
-                                  personalInfoProvider.userData?.nativeLanguage ?? "",
+                                  authProvider.userData?.nativeLanguage ?? "",
                                   style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                               ],
@@ -184,7 +183,7 @@ class ProfileScreen extends StatelessWidget {
                                   style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                                 ),
                                 Text(
-                                  personalInfoProvider.userData?.learningLanguage ?? "",
+                                  authProvider.userData?.learningLanguage ?? "",
                                   style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                               ],
