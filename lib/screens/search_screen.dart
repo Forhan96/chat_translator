@@ -110,7 +110,7 @@ class SearchScreen extends StatelessWidget {
                         onTap: () {
                           searchProvider.searchParameters = {
                             "gender": "Male",
-                            "country": "Male",
+                            "country": "Bangladesh",
                           };
                         },
                         child: DefaultContainer(
