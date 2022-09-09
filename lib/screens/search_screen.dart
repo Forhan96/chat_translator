@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:selection_dialogs/country_selector_dialog.dart';
+import 'package:selection_dialogs/gender_selector_dialog.dart';
 import 'package:selection_dialogs/language_selector_dialog.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -47,6 +48,20 @@ class SearchScreen extends StatelessWidget {
               child: Column(
                 children: [
                   DefaultContainer(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return GenderSelector(
+                            onTap: (gender) {
+                              searchProvider.searchParameters = {
+                                "gender": gender,
+                              };
+                            },
+                          );
+                        },
+                      );
+                    },
                     padding: EdgeInsets.all(10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -116,16 +131,17 @@ class SearchScreen extends StatelessWidget {
                   DefaultContainer(
                     onTap: () {
                       showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CountrySelectionDialog(
-                              onTap: (country) {
-                                searchProvider.searchParameters = {
-                                  "country": country.name,
-                                };
-                              },
-                            );
-                          });
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CountrySelector(
+                            onTap: (country) {
+                              searchProvider.searchParameters = {
+                                "country": country.name,
+                              };
+                            },
+                          );
+                        },
+                      );
                     },
                     padding: EdgeInsets.all(10),
                     child: Row(
@@ -158,7 +174,9 @@ class SearchScreen extends StatelessWidget {
                         width: 16.w,
                       ),
                       DefaultContainer(
-                        onTap: () {},
+                        onTap: () {
+                          print(searchProvider.searchParameters);
+                        },
                         padding: EdgeInsets.all(10),
                         child: Text("Search"),
                       ),

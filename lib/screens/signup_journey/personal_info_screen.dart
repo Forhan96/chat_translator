@@ -188,7 +188,7 @@ class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return CountrySelectionDialog(onTap: (item) {
+                              return CountrySelector(onTap: (item) {
                                 countryController.text = item.name;
                               });
                             },

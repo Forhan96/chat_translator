@@ -235,7 +235,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return CountrySelectionDialog(onTap: (item) {
+                                    return CountrySelector(onTap: (item) {
                                       countryController.text = item.name;
                                     });
                                   },
