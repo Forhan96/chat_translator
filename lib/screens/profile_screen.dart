@@ -31,10 +31,6 @@ class ProfileScreen extends StatelessWidget {
           style: TextStyle(color: Colors.grey),
         ),
         centerTitle: true,
-        // leading: Icon(
-        //   Icons.account_balance_sharp,
-        //   color: Colors.black,
-        // ),
 
         actions: [
           IconButton(
@@ -43,13 +39,9 @@ class ProfileScreen extends StatelessWidget {
             },
             icon: Icon(
               Icons.edit,
-              color: Colors.black,
+              color: AppColors.primaryColor,
             ),
           ),
-          // Icon(
-          //   Icons.edit,
-          //   color: Colors.black,
-          // )
         ],
       ),
       body: SafeArea(
