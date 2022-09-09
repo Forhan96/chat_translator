@@ -24,4 +24,29 @@ class SearchProvider with ChangeNotifier {
     });
     notifyListeners();
   }
+
+  void performSearch() {
+    String baseUrl = "";
+    searchParameters.forEach(
+      (field, value) {
+        if (value != "") {
+          if (field == "native_lang") {
+            baseUrl = '$baseUrl&native_lang=$value';
+          } else if (field == "learning_lang") {
+            baseUrl = '$baseUrl&learning_lang=$value';
+          } else if (field == "country") {
+            baseUrl = '$baseUrl&country=$value';
+          } else if (field == "gender") {
+            baseUrl = '$baseUrl&gender=$value';
+          } else if (field == "age_range") {
+            baseUrl = '$baseUrl&age_range=$value';
+          } else {
+            baseUrl = '$baseUrl&$field=$value';
+          }
+        }
+      },
+    );
+
+    debugPrint(baseUrl);
+  }
 }

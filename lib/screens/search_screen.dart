@@ -176,6 +176,7 @@ class SearchScreen extends StatelessWidget {
                       DefaultContainer(
                         onTap: () {
                           print(searchProvider.searchParameters);
+                          searchProvider.performSearch();
                         },
                         padding: EdgeInsets.all(10),
                         child: Text("Search"),
