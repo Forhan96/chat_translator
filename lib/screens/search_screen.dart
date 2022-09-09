@@ -6,6 +6,8 @@ import 'package:chat_translator/utils/color_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:selection_dialogs/country_selector_dialog.dart';
+import 'package:selection_dialogs/language_selector_dialog.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -58,6 +60,20 @@ class SearchScreen extends StatelessWidget {
                     height: 16.h,
                   ),
                   DefaultContainer(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return LanguageSelector(
+                            onTap: (language) {
+                              searchProvider.searchParameters = {
+                                "native_lang": language.name,
+                              };
+                            },
+                          );
+                        },
+                      );
+                    },
                     padding: EdgeInsets.all(10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -71,6 +87,20 @@ class SearchScreen extends StatelessWidget {
                     height: 16.h,
                   ),
                   DefaultContainer(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return LanguageSelector(
+                            onTap: (language) {
+                              searchProvider.searchParameters = {
+                                "learning_lang": language.name,
+                              };
+                            },
+                          );
+                        },
+                      );
+                    },
                     padding: EdgeInsets.all(10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -84,6 +114,19 @@ class SearchScreen extends StatelessWidget {
                     height: 16.h,
                   ),
                   DefaultContainer(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CountrySelectionDialog(
+                              onTap: (country) {
+                                searchProvider.searchParameters = {
+                                  "country": country.name,
+                                };
+                              },
+                            );
+                          });
+                    },
                     padding: EdgeInsets.all(10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,23 +143,24 @@ class SearchScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       DefaultContainer(
+                        onTap: () {
+                          searchProvider.searchParameters = {
+                            "gender": "",
+                            "native_lang": "",
+                            "learning_lang": "",
+                            "country": "",
+                          };
+                        },
                         padding: EdgeInsets.all(10),
                         child: Text("Clear"),
                       ),
                       SizedBox(
                         width: 16.w,
                       ),
-                      InkWell(
-                        onTap: () {
-                          searchProvider.searchParameters = {
-                            "gender": "Male",
-                            "country": "Bangladesh",
-                          };
-                        },
-                        child: DefaultContainer(
-                          padding: EdgeInsets.all(10),
-                          child: Text("Search"),
-                        ),
+                      DefaultContainer(
+                        onTap: () {},
+                        padding: EdgeInsets.all(10),
+                        child: Text("Search"),
                       ),
                     ],
                   ),
