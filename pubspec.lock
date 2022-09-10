@@ -220,7 +220,7 @@ packages:
     source: hosted
     version: "2.0.7"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -393,7 +393,7 @@ packages:
       name: selection_dialogs
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.2"
+    version: "0.0.3+2"
   sky_engine:
     dependency: transitive
     description: flutter

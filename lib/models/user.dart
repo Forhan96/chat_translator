@@ -11,7 +11,7 @@ class UserData {
     this.birthDate,
     this.phoneNumber,
     this.country,
-    this.sex,
+    this.gender,
     this.nativeLanguage,
     this.learningLanguage,
     this.firebaseToken,
@@ -26,7 +26,7 @@ class UserData {
   DateTime? birthDate;
   String? phoneNumber;
   String? country;
-  String? sex;
+  String? gender;
   String? nativeLanguage;
   String? learningLanguage;
   String? firebaseToken;
@@ -42,7 +42,7 @@ class UserData {
       'birthDate': birthDate,
       'phoneNumber': phoneNumber,
       'country': country,
-      'sex': sex,
+      'gender': gender,
       'nativeLanguage': nativeLanguage,
       'learningLanguage': learningLanguage,
       'firebaseToken': firebaseToken,
@@ -59,7 +59,7 @@ class UserData {
     birthDate = (doc['birthDate'] as Timestamp?)?.toDate();
     phoneNumber = doc['phoneNumber'] as String?;
     country = doc['country'] as String?;
-    sex = doc['sex'] as String?;
+    gender = doc['gender'] as String?;
     nativeLanguage = doc['nativeLanguage'] as String?;
     learningLanguage = doc['learningLanguage'] as String?;
     firebaseToken = doc['firebaseToken'] as String?;
@@ -67,7 +67,7 @@ class UserData {
 
   @override
   String toString() {
-    return 'UserData{id: $id, name: $name, userName: $userName, email: $email, avatar: $avatar, aboutMe: $bio,  birthDate: $birthDate, phoneNumber: $phoneNumber, country: $country, sex: $sex, nativeLanguage: $nativeLanguage, learningLanguage: $learningLanguage, firebaseToken: $firebaseToken}';
+    return 'UserData{id: $id, name: $name, userName: $userName, email: $email, avatar: $avatar, aboutMe: $bio,  birthDate: $birthDate, phoneNumber: $phoneNumber, country: $country, gender: $gender, nativeLanguage: $nativeLanguage, learningLanguage: $learningLanguage, firebaseToken: $firebaseToken}';
     // age: $age,
   }
 }

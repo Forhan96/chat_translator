@@ -25,7 +25,9 @@ dependencies:
   convex_bottom_bar: ^3.0.0
   syncfusion_flutter_datepicker: ^20.2.48
   cached_network_image: ^3.2.2
-  selection_dialogs: ^0.0.2
+  selection_dialogs: ^0.0.3+2
+  http: ^0.13.4
+
 
 
 dev_dependencies:

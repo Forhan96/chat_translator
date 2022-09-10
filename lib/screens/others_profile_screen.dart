@@ -1,24 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_translator/components/animations/loading_animation.dart';
 import 'package:chat_translator/components/default_container.dart';
-import 'package:chat_translator/components/default_navbar.dart';
 import 'package:chat_translator/providers/auth_provider.dart';
-import 'package:chat_translator/router/routes.dart';
 import 'package:chat_translator/utils/color_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class ProfileScreen extends StatelessWidget {
-  ProfileScreen({Key? key}) : super(key: key);
+class OthersProfileScreen extends StatelessWidget {
+  final String uid;
+  OthersProfileScreen({Key? key, required this.uid}) : super(key: key);
   // AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
 
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     // PersonalInfoProvider personalInfoProvider = Provider.of<PersonalInfoProvider>(context);
-    authProvider.getCurrentUserData();
+    authProvider.getOtherUserData(uid);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -26,37 +25,17 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         // shadowColor: Colors.grey.withOpacity(0.2),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pushNamed(context, Routes.EDIT_PROFILE_SCREEN);
-          },
-          icon: Icon(
-            Icons.edit,
-            color: AppColors.primaryColor,
-          ),
-        ),
         title: const Text(
           "Profile",
           style: TextStyle(color: Colors.grey),
         ),
         centerTitle: true,
-
-        actions: [
-          IconButton(
-            onPressed: () {
-              Provider.of<AuthProvider>(context, listen: false).signOut();
-              Navigator.pushReplacementNamed(context, Routes.AUTH_WRAPPER);
-            },
-            icon: Icon(
-              Icons.logout,
-              color: AppColors.primaryColor,
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
-        child: authProvider.loading
-            ? Center(child: Loader())
+        child: authProvider.otherUserLoading
+            ? Center(
+                child: Loader(),
+              )
             : Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
                 child: Column(
@@ -90,21 +69,21 @@ class ProfileScreen extends StatelessWidget {
                                 height: 6.h,
                               ),
                               Text(
-                                authProvider.userData?.name ?? "",
+                                authProvider.otherUserData?.name ?? "",
                                 style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(
                                 height: 6.h,
                               ),
                               Text(
-                                authProvider.userData?.email ?? "",
+                                authProvider.otherUserData?.email ?? "",
                                 style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                               ),
                               SizedBox(
                                 height: 6.h,
                               ),
                               Text(
-                                authProvider.userData?.bio ?? "",
+                                authProvider.otherUserData?.bio ?? "",
                                 style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                               ),
                             ],
@@ -128,7 +107,7 @@ class ProfileScreen extends StatelessWidget {
                                   style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                                 ),
                                 Text(
-                                  DateFormat('dd MMMM, yyyy').format(authProvider.userData?.birthDate ?? DateTime.now()),
+                                  DateFormat('dd MMMM, yyyy').format(authProvider.otherUserData?.birthDate ?? DateTime.now()),
                                   style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                               ],
@@ -144,7 +123,7 @@ class ProfileScreen extends StatelessWidget {
                                   style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                                 ),
                                 Text(
-                                  authProvider.userData?.gender ?? "",
+                                  authProvider.otherUserData?.gender ?? "",
                                   style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                               ],
@@ -169,7 +148,7 @@ class ProfileScreen extends StatelessWidget {
                                   style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                                 ),
                                 Text(
-                                  authProvider.userData?.nativeLanguage ?? "",
+                                  authProvider.otherUserData?.nativeLanguage ?? "",
                                   style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                               ],
@@ -185,7 +164,7 @@ class ProfileScreen extends StatelessWidget {
                                   style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                                 ),
                                 Text(
-                                  authProvider.userData?.learningLanguage ?? "",
+                                  authProvider.otherUserData?.learningLanguage ?? "",
                                   style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                               ],
@@ -194,12 +173,26 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: 12.h,
+                    ),
+                    DefaultContainer(
+                      onTap: () {},
+                      padding: EdgeInsets.all(16),
+                      color: AppColors.primaryColor,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Start Chat",
+                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-      ),
-      bottomNavigationBar: DefaultNavBar(
-        initialActiveIndex: 2,
       ),
     );
   }
