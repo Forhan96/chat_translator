@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_translator/components/animations/loading_animation.dart';
 import 'package:chat_translator/components/default_container.dart';
+import 'package:chat_translator/models/chat_info.dart';
 import 'package:chat_translator/providers/auth_provider.dart';
+import 'package:chat_translator/providers/chat_provider.dart';
+import 'package:chat_translator/screens/chat_screen.dart';
 import 'package:chat_translator/utils/color_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,13 +13,13 @@ import 'package:provider/provider.dart';
 
 class OthersProfileScreen extends StatelessWidget {
   final String uid;
-  OthersProfileScreen({Key? key, required this.uid}) : super(key: key);
-  // AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+  const OthersProfileScreen({Key? key, required this.uid}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    // PersonalInfoProvider personalInfoProvider = Provider.of<PersonalInfoProvider>(context);
+    ChatProvider chatProvider = Provider.of<ChatProvider>(context, listen: false);
+
     authProvider.getOtherUserData(uid);
 
     return Scaffold(
@@ -200,7 +203,15 @@ class OthersProfileScreen extends StatelessWidget {
                       height: 16.h,
                     ),
                     DefaultContainer(
-                      onTap: () {},
+                      onTap: () async {
+                        ChatInfo chatInfo = ChatInfo(authProvider.userData!, authProvider.otherUserData!);
+                        bool docExists = await chatProvider.checkDocExists(chatInfo.getChatId());
+                        if (!docExists) {
+                          chatProvider.createChat(chatInfo);
+                        }
+                        // Navigator.pushNamed(context, Routes.CHAT_SCREEN, arguments: [chatInfo]);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(chatInfo: chatInfo)));
+                      },
                       padding: EdgeInsets.all(16),
                       color: AppColors.primaryColor,
                       child: Row(

@@ -6,6 +6,7 @@ class Routes {
   static String PROFILE_SCREEN = "/profile";
   static String EDIT_PROFILE_SCREEN = "/edit-profile";
   static String OTHERS_PROFILE_SCREEN = "/others-profile";
+  static String CHAT_SCREEN = "/chat";
 
   static String SPLASH_SCREEN = "/splash";
   static String SIGN_IN_SCREEN = "/sign-in";
@@ -17,5 +18,9 @@ class Routes {
 
   static String getOthersProfileScreenRoute(String uid) {
     return "$OTHERS_PROFILE_SCREEN?uid=$uid";
+  }
+
+  static String getChatScreenRoute(String uid) {
+    return "$CHAT_SCREEN?uid=$uid";
   }
 }

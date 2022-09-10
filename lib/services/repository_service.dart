@@ -1,5 +1,10 @@
+import 'dart:convert';
+
+import 'package:chat_translator/models/chat_info.dart';
 import 'package:chat_translator/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:encrypt/encrypt.dart' as EN;
+import 'package:random_string/random_string.dart';
 
 class RepositoryService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -55,5 +60,92 @@ class RepositoryService {
     QuerySnapshot result = await query.get();
     List<DocumentSnapshot> resultDocs = result.docs;
     return resultDocs;
+  }
+
+  /// Check If Document Exists
+  Future<bool> checkDocExists(String docId) async {
+    try {
+      var doc = await _firestore.collection("messages").doc(docId).get();
+      return doc.exists;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> createChat(String chatId, String fromUserId, String toUserId) async {
+    var doc = await _firestore.collection("messages").doc(chatId).get();
+    doc.exists;
+    await _firestore.collection("messages").doc(chatId).set({
+      "users": [
+        fromUserId,
+        toUserId,
+      ]
+    });
+  }
+
+  Future<void> sendMessage(
+    ChatInfo chatInfo,
+    String content,
+    int type,
+  ) async {
+    final chatReference = FirebaseFirestore.instance
+        .collection('messages')
+        .doc(chatInfo.getChatId())
+        .collection(chatInfo.getChatId())
+        .doc(Timestamp.now().millisecondsSinceEpoch.toString());
+
+    //************ENCRYPTION*****************
+
+    EN.Key key;
+    EN.Encrypted encrypted;
+    final msgDoc = _firestore.collection('messages').doc(chatInfo.getChatId());
+    final msgValue = await msgDoc.get();
+    if (msgValue.data()!['key'] != null) {
+      key = EN.Key(base64.decode(msgValue.data()!['key'].toString()));
+    } else {
+      String random32String = randomString(32);
+      key = EN.Key.fromUtf8(random32String);
+
+      msgDoc.update({'key': key.base64});
+    }
+
+    final iv = EN.IV.fromLength(16);
+    final encrypter = EN.Encrypter(EN.AES(key));
+    encrypted = encrypter.encrypt(content, iv: iv);
+
+    //************ENCRYPTION*****************
+
+    return _firestore.runTransaction((transaction) async {
+      transaction.set(
+        chatReference,
+        {
+          'idFrom': chatInfo.fromUser.id,
+          'idTo': chatInfo.toUser.id,
+          'timestamp': Timestamp.now().millisecondsSinceEpoch.toString(),
+          'content': encrypted.base64,
+          'type': type,
+          'contentLang': chatInfo.fromUser.nativeLanguage,
+        },
+      );
+    });
+  }
+
+  Future<void> setChatLastMsg(ChatInfo chatInfo, String lastContent) async {
+    final chatReference = FirebaseFirestore.instance.collection('messages').doc(chatInfo.getChatId());
+
+    return _firestore.runTransaction((transaction) async {
+      transaction.update(
+        chatReference,
+        {
+          'lastMessage': lastContent,
+          'lastMessageTime': Timestamp.now(),
+          "lastMsgSeen": [chatInfo.fromUser.id]
+        },
+      );
+    });
+  }
+
+  Stream<QuerySnapshot> getMessages(String messageID, int msgLimit) {
+    return _firestore.collection('messages').doc(messageID).collection(messageID).orderBy('timestamp', descending: true).limit(msgLimit).snapshots();
   }
 }
