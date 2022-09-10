@@ -46,7 +46,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
   void didChangeDependencies() {
     authProvider = Provider.of<AuthProvider>(context, listen: false);
     // personalInfoProvider = Provider.of<PersonalInfoProvider>(context, listen: false);
-    authProvider.getUserData(authProvider.uid() ?? "");
+    authProvider.getCurrentUserData();
     userData = authProvider.userData;
     if (userData != null) {
       nameController.text = userData?.name ?? "";
@@ -101,7 +101,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
 
           if (formKey.currentState!.validate()) {
             print(userData);
-            await authProvider.setUserData(userData!);
+            await authProvider.updateUserData(userData!);
             Navigator.pop(context);
           }
         },

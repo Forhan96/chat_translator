@@ -4,11 +4,13 @@ class DefaultContainer extends StatelessWidget {
   final Widget? child;
   final Function? onTap;
   final EdgeInsetsGeometry? padding;
+  final Color? color;
   const DefaultContainer({
     Key? key,
     this.child,
     this.padding,
     this.onTap,
+    this.color = Colors.white,
   }) : super(key: key);
 
   @override
@@ -21,7 +23,7 @@ class DefaultContainer extends StatelessWidget {
         alignment: Alignment.centerLeft,
         padding: padding,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: color,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(

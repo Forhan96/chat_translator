@@ -1,7 +1,9 @@
+import 'package:chat_translator/providers/auth_provider.dart';
 import 'package:chat_translator/router/routes.dart';
 import 'package:chat_translator/utils/color_const.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DefaultNavBar extends StatelessWidget {
   // final Function onTap;
@@ -14,6 +16,8 @@ class DefaultNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
     return ConvexAppBar(
       initialActiveIndex: initialActiveIndex,
       onTap: (int i) {

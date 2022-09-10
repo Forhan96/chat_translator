@@ -2,6 +2,7 @@ import 'package:chat_translator/chat_translator_app.dart';
 import 'package:chat_translator/router/routes.dart';
 import 'package:chat_translator/screens/edit_profile_screen.dart';
 import 'package:chat_translator/screens/home_screen.dart';
+import 'package:chat_translator/screens/others_profile_screen.dart';
 import 'package:chat_translator/screens/profile_screen.dart';
 import 'package:chat_translator/screens/search_screen.dart';
 import 'package:chat_translator/screens/sign_in_screen.dart';
@@ -27,6 +28,10 @@ class RouterHelper {
   static final Handler _homeScreenHandler = Handler(handlerFunc: (context, parameters) => HomeScreen());
   static final Handler _searchScreenHandler = Handler(handlerFunc: (context, parameters) => SearchScreen());
   static final Handler _profileScreenHandler = Handler(handlerFunc: (context, parameters) => ProfileScreen());
+  static final Handler _othersProfileScreenHandler = Handler(
+      handlerFunc: (context, parameters) => OthersProfileScreen(
+            uid: parameters["uid"]![0],
+          ));
   static final Handler _editProfileScreenHandler = Handler(handlerFunc: (context, parameters) => EditProfileScreen());
 
   static final Handler _notFoundHandler = Handler(handlerFunc: (context, parameters) {
@@ -88,6 +93,12 @@ class RouterHelper {
     router.define(
       Routes.EDIT_PROFILE_SCREEN,
       handler: _editProfileScreenHandler,
+      transitionType: TransitionType.fadeIn,
+    );
+
+    router.define(
+      Routes.OTHERS_PROFILE_SCREEN,
+      handler: _othersProfileScreenHandler,
       transitionType: TransitionType.fadeIn,
     );
 

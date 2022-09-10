@@ -58,7 +58,7 @@ class PersonalInfoScreen extends StatelessWidget with InputValidationMixin {
           userData.nativeLanguage = nativeLangController.text;
           userData.learningLanguage = learningLangController.text;
           if (formKey.currentState!.validate()) {
-            await authProvider.setUserData(userData);
+            await authProvider.updateUserData(userData);
             Navigator.pushNamed(context, Routes.AUTH_WRAPPER);
           }
         },

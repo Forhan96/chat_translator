@@ -29,7 +29,7 @@ class RepositoryService {
     return doc == null ? null : UserData.fromJson(doc);
   }
 
-  performSearch(Map<String, dynamic> searchParameters) async {
+  Future<List<DocumentSnapshot>> performSearch(Map<String, dynamic> searchParameters) async {
     Query query = _firestore.collection("users");
     searchParameters.forEach(
       (field, value) {
@@ -53,7 +53,7 @@ class RepositoryService {
       },
     );
     QuerySnapshot result = await query.get();
-
-    print(result.docs);
+    List<DocumentSnapshot> resultDocs = result.docs;
+    return resultDocs;
   }
 }
