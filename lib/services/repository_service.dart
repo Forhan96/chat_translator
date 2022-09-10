@@ -28,4 +28,32 @@ class RepositoryService {
     final Map<String, dynamic>? doc = result.data();
     return doc == null ? null : UserData.fromJson(doc);
   }
+
+  performSearch(Map<String, dynamic> searchParameters) async {
+    Query query = _firestore.collection("users");
+    searchParameters.forEach(
+      (field, value) {
+        if (value != "") {
+          if (field == "native_lang") {
+            query = query.where("nativeLanguage", isEqualTo: value);
+          } else if (field == "learning_lang") {
+            query = query.where("learningLanguage", isEqualTo: value);
+          } else if (field == "country") {
+            query = query.where("country", isEqualTo: value);
+          } else if (field == "gender") {
+            query = query.where("gender", isEqualTo: value);
+          }
+          // else if (field == "age_range") {
+          //   query = '$query&age_range=$value';
+          // }
+          else {
+            query = query.where(field, isEqualTo: value);
+          }
+        }
+      },
+    );
+    QuerySnapshot result = await query.get();
+
+    print(result.docs);
+  }
 }

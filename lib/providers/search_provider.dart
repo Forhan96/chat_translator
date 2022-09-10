@@ -1,6 +1,9 @@
+import 'package:chat_translator/services/repository_service.dart';
 import 'package:flutter/cupertino.dart';
 
 class SearchProvider with ChangeNotifier {
+  final RepositoryService _repositoryService = RepositoryService();
+
   bool _loading = false;
   Map<String, dynamic> _searchParameters = {
     "gender": "",
@@ -25,28 +28,20 @@ class SearchProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void performSearch() {
-    String baseUrl = "";
-    searchParameters.forEach(
-      (field, value) {
-        if (value != "") {
-          if (field == "native_lang") {
-            baseUrl = '$baseUrl&native_lang=$value';
-          } else if (field == "learning_lang") {
-            baseUrl = '$baseUrl&learning_lang=$value';
-          } else if (field == "country") {
-            baseUrl = '$baseUrl&country=$value';
-          } else if (field == "gender") {
-            baseUrl = '$baseUrl&gender=$value';
-          } else if (field == "age_range") {
-            baseUrl = '$baseUrl&age_range=$value';
-          } else {
-            baseUrl = '$baseUrl&$field=$value';
-          }
-        }
-      },
-    );
+  Future<void> performSearch() async {
+    _repositoryService.performSearch(_searchParameters);
 
-    debugPrint(baseUrl);
+    // var documents;
+    //
+    // debugPrint(baseUrl);
+    // var response = await http.get(Uri.parse(baseUrl));
+    //
+    // if (response.statusCode == 200) {
+    //   documents = jsonDecode(response.body)['data'];
+    // } else {
+    //   documents = [];
+    // }
+    //
+    // print(documents);
   }
 }

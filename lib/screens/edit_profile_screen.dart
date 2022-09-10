@@ -28,7 +28,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController dobController = TextEditingController();
-  TextEditingController sexValueController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   TextEditingController countryController = TextEditingController();
   TextEditingController nativeLangController = TextEditingController();
@@ -53,7 +53,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
       emailController.text = userData?.email ?? "";
       dobController.text = DateFormat('dd MMMM, yyyy').format(userData?.birthDate ?? DateTime.now());
       date = userData?.birthDate as Object;
-      sexValueController.text = userData?.sex ?? "";
+      genderController.text = userData?.gender ?? "";
       bioController.text = userData?.bio ?? "";
       countryController.text = userData?.country ?? "";
       nativeLangController.text = userData?.nativeLanguage ?? "";
@@ -93,7 +93,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
           userData?.name = nameController.text;
           userData?.email = emailController.text;
           userData?.birthDate = date as DateTime?;
-          userData?.sex = sexValueController.text;
+          userData?.gender = genderController.text;
           userData?.bio = bioController.text;
           userData?.country = countryController.text;
           userData?.nativeLanguage = nativeLangController.text;
@@ -167,47 +167,43 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
                             SizedBox(
                               height: 8.h,
                             ),
-                            InkWell(
+                            DefaultContainer(
                               onTap: () {
                                 _showDatePicker(context, controller: dobController);
                               },
-                              child: DefaultContainer(
-                                padding: const EdgeInsets.all(10),
-                                child: TextInputField(
-                                  controller: dobController,
-                                  validator: (dob) {
-                                    if (isNotEmpty(dob ?? "")) {
-                                      return null;
-                                    } else {
-                                      return 'Provide Date of Birth';
-                                    }
-                                  },
-                                  label: 'Date of Birth',
-                                  enabled: false,
-                                ),
+                              padding: const EdgeInsets.all(10),
+                              child: TextInputField(
+                                controller: dobController,
+                                validator: (dob) {
+                                  if (isNotEmpty(dob ?? "")) {
+                                    return null;
+                                  } else {
+                                    return 'Provide Date of Birth';
+                                  }
+                                },
+                                label: 'Date of Birth',
+                                enabled: false,
                               ),
                             ),
                             SizedBox(
                               height: 8.h,
                             ),
-                            InkWell(
+                            DefaultContainer(
                               onTap: () {
-                                _showGenderOptions(context, controller: sexValueController);
+                                _showGenderOptions(context, controller: genderController);
                               },
-                              child: DefaultContainer(
-                                padding: const EdgeInsets.all(10),
-                                child: TextInputField(
-                                  controller: sexValueController,
-                                  validator: (sex) {
-                                    if (isNotEmpty(sex ?? "")) {
-                                      return null;
-                                    } else {
-                                      return 'Select your sex';
-                                    }
-                                  },
-                                  label: 'Sex',
-                                  enabled: false,
-                                ),
+                              padding: const EdgeInsets.all(10),
+                              child: TextInputField(
+                                controller: genderController,
+                                validator: (gender) {
+                                  if (isNotEmpty(gender ?? "")) {
+                                    return null;
+                                  } else {
+                                    return 'Select your gender';
+                                  }
+                                },
+                                label: 'Gender',
+                                enabled: false,
                               ),
                             ),
                             SizedBox(
@@ -230,7 +226,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
                         padding: const EdgeInsets.all(10),
                         child: Column(
                           children: [
-                            InkWell(
+                            DefaultContainer(
                               onTap: () {
                                 showDialog(
                                   context: context,
@@ -241,26 +237,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
                                   },
                                 );
                               },
-                              child: DefaultContainer(
-                                padding: const EdgeInsets.all(10),
-                                child: TextInputField(
-                                  controller: countryController,
-                                  validator: (country) {
-                                    if (isNotEmpty(country ?? "")) {
-                                      return null;
-                                    } else {
-                                      return 'Select your country';
-                                    }
-                                  },
-                                  label: 'Country',
-                                  enabled: false,
-                                ),
+                              padding: const EdgeInsets.all(10),
+                              child: TextInputField(
+                                controller: countryController,
+                                validator: (country) {
+                                  if (isNotEmpty(country ?? "")) {
+                                    return null;
+                                  } else {
+                                    return 'Select your country';
+                                  }
+                                },
+                                label: 'Country',
+                                enabled: false,
                               ),
                             ),
                             SizedBox(
                               height: 8.h,
                             ),
-                            InkWell(
+                            DefaultContainer(
                               onTap: () {
                                 showDialog(
                                   context: context,
@@ -273,26 +267,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
                                   },
                                 );
                               },
-                              child: DefaultContainer(
-                                padding: const EdgeInsets.all(10),
-                                child: TextInputField(
-                                  controller: nativeLangController,
-                                  validator: (language) {
-                                    if (isNotEmpty(language ?? "")) {
-                                      return null;
-                                    } else {
-                                      return 'Select your native language';
-                                    }
-                                  },
-                                  label: 'Native Language',
-                                  enabled: false,
-                                ),
+                              padding: const EdgeInsets.all(10),
+                              child: TextInputField(
+                                controller: nativeLangController,
+                                validator: (language) {
+                                  if (isNotEmpty(language ?? "")) {
+                                    return null;
+                                  } else {
+                                    return 'Select your native language';
+                                  }
+                                },
+                                label: 'Native Language',
+                                enabled: false,
                               ),
                             ),
                             SizedBox(
                               height: 8.h,
                             ),
-                            InkWell(
+                            DefaultContainer(
                               onTap: () {
                                 showDialog(
                                   context: context,
@@ -305,20 +297,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
                                   },
                                 );
                               },
-                              child: DefaultContainer(
-                                padding: const EdgeInsets.all(10),
-                                child: TextInputField(
-                                  controller: learningLangController,
-                                  validator: (language) {
-                                    if (isNotEmpty(language ?? "")) {
-                                      return null;
-                                    } else {
-                                      return 'Select learning language';
-                                    }
-                                  },
-                                  label: 'Learning Language',
-                                  enabled: false,
-                                ),
+                              padding: const EdgeInsets.all(10),
+                              child: TextInputField(
+                                controller: learningLangController,
+                                validator: (language) {
+                                  if (isNotEmpty(language ?? "")) {
+                                    return null;
+                                  } else {
+                                    return 'Select learning language';
+                                  }
+                                },
+                                label: 'Learning Language',
+                                enabled: false,
                               ),
                             ),
                           ],

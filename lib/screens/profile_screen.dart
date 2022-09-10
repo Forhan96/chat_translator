@@ -130,11 +130,11 @@ class ProfileScreen extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  "Sex",
+                                  "Gender",
                                   style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                                 ),
                                 Text(
-                                  authProvider.userData?.sex ?? "",
+                                  authProvider.userData?.gender ?? "",
                                   style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                               ],
