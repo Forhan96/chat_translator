@@ -194,6 +194,29 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: 6.h,
+                    ),
+                    DefaultContainer(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                "Country",
+                                style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
+                              ),
+                              Text(
+                                authProvider.userData?.country ?? "",
+                                style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

@@ -174,7 +174,30 @@ class OthersProfileScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: 12.h,
+                      height: 6.h,
+                    ),
+                    DefaultContainer(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                "Country",
+                                style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
+                              ),
+                              Text(
+                                authProvider.otherUserData?.country ?? "",
+                                style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 16.h,
                     ),
                     DefaultContainer(
                       onTap: () {},
