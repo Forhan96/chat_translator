@@ -43,7 +43,16 @@ class ChatScreen extends StatelessWidget with InputValidationMixin {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(chatInfo.fromUser.name ?? ""),
+              Expanded(
+                child: ListView.builder(
+                    reverse: true,
+                    itemCount: chatProvider.messages.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(chatProvider.messages[index].contentLang),
+                      );
+                    }),
+              ),
               DefaultContainer(
                 padding: EdgeInsets.all(10),
                 child: Row(

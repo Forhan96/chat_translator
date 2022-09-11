@@ -40,8 +40,10 @@ class ChatProvider with ChangeNotifier {
       //   // print(doc.data());
       //   print(_messages.toString());
       // }
+      _messages.clear();
       docs.forEach((element) {
         _messages.add(Message.fromJson(element.data() as Map<String, dynamic>));
+        notifyListeners();
       });
       print(_messages.length);
       print(_messages);
