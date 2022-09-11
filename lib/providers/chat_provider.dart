@@ -34,12 +34,6 @@ class ChatProvider with ChangeNotifier {
   Future<void> getMessages(ChatInfo chatInfo) async {
     _repositoryService.getMessages(chatInfo.getChatId(), 20).listen((event) {
       var docs = event.docs;
-      // for (DocumentSnapshot<Map<String, dynamic>> doc in docs) {
-      //   _messages.add(Message.fromJson(doc.data()));
-      //
-      //   // print(doc.data());
-      //   print(_messages.toString());
-      // }
       _messages.clear();
       for (var element in docs) {
         _messages.add(Message.fromJson(element.data() as Map<String, dynamic>));
@@ -47,8 +41,6 @@ class ChatProvider with ChangeNotifier {
       }
       print(_messages.length);
       print(_messages);
-
-      // print(event.docs.toString());
     });
   }
 }
