@@ -1,7 +1,6 @@
 import 'package:chat_translator/models/chat_info.dart';
 import 'package:chat_translator/models/message.dart';
 import 'package:chat_translator/services/repository_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class ChatProvider with ChangeNotifier {
@@ -16,7 +15,7 @@ class ChatProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  List _messages = [];
+  List<Message> _messages = [];
   List get messages => _messages;
 
   Future<bool> checkDocExists(String docId) async {
@@ -33,15 +32,20 @@ class ChatProvider with ChangeNotifier {
   }
 
   Future<void> getMessages(ChatInfo chatInfo) async {
-    Stream messages = _repositoryService.getMessages(chatInfo.getChatId(), 20);
-    messages.listen((event) {
+    _repositoryService.getMessages(chatInfo.getChatId(), 20).listen((event) {
       var docs = event.docs;
-      for (DocumentSnapshot<Map<String, dynamic>> doc in docs) {
-        _messages.add(Message.fromJson(doc.data()));
+      // for (DocumentSnapshot<Map<String, dynamic>> doc in docs) {
+      //   _messages.add(Message.fromJson(doc.data()));
+      //
+      //   // print(doc.data());
+      //   print(_messages.toString());
+      // }
+      docs.forEach((element) {
+        _messages.add(Message.fromJson(element.data() as Map<String, dynamic>));
+      });
+      print(_messages.length);
+      print(_messages);
 
-        // print(doc.data());
-        print(_messages.toString());
-      }
       // print(event.docs.toString());
     });
   }
