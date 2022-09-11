@@ -13,7 +13,7 @@ import 'package:chat_translator/screens/signup_journey/sign_up_screen.dart';
 import 'package:chat_translator/screens/signup_journey/verify_screen.dart';
 import 'package:chat_translator/screens/splash_screen.dart';
 import 'package:fluro/fluro.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class RouterHelper {
   static final FluroRouter router = FluroRouter();
@@ -28,10 +28,9 @@ class RouterHelper {
   static final Handler _verifyScreenHandler = Handler(handlerFunc: (context, parameters) => VerifyScreen());
   static final Handler _personalInfoScreenHandler = Handler(handlerFunc: (context, parameters) => PersonalInfoScreen());
   static final Handler _chatScreenHandler = Handler(handlerFunc: (context, parameters) {
-    print("I'm here--------------");
-    final ChatInfo chatInfo = ModalRoute.of(context!)?.settings.arguments as ChatInfo;
-    print(chatInfo);
-    return ChatScreen(chatInfo: chatInfo);
+    final args = ModalRoute.of(context!)?.settings.arguments as Map<String, dynamic>;
+    print("----------------------$args");
+    return ChatScreen(chatInfo: ChatInfo.fromJson(args));
   });
 
   static final Handler _homeScreenHandler = Handler(handlerFunc: (context, parameters) => HomeScreen());

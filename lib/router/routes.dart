@@ -1,7 +1,7 @@
 class Routes {
   static String AUTH_WRAPPER = "/";
 
-  static String HOME_SCREEN = "/chat";
+  static String HOME_SCREEN = "/chat-list";
   static String SEARCH_SCREEN = "/search";
   static String PROFILE_SCREEN = "/profile";
   static String EDIT_PROFILE_SCREEN = "/edit-profile";

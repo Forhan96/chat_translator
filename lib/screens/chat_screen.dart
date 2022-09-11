@@ -17,8 +17,6 @@ class ChatScreen extends StatelessWidget with InputValidationMixin {
     ChatProvider chatProvider = Provider.of<ChatProvider>(context);
     chatProvider.getMessages(chatInfo);
 
-    TextEditingController messageController = TextEditingController();
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -53,37 +51,55 @@ class ChatScreen extends StatelessWidget with InputValidationMixin {
                       );
                     }),
               ),
-              DefaultContainer(
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextInputField(
-                        controller: messageController,
-                        label: '',
-                      ),
-                    ),
-                    SizedBox(
-                      width: 8.w,
-                    ),
-                    DefaultContainer(
-                      onTap: () {
-                        String content = messageController.text;
-                        chatProvider.sendMessage(chatInfo, content, 1);
-                        messageController.clear();
-                      },
-                      padding: EdgeInsets.all(10),
-                      child: Icon(
-                        Icons.send_rounded,
-                        color: AppColors.primaryColor,
-                      ),
-                    )
-                  ],
-                ),
-              ),
+              ChatInputModule(chatInfo: chatInfo),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ChatInputModule extends StatelessWidget {
+  const ChatInputModule({
+    Key? key,
+    required this.chatInfo,
+  }) : super(key: key);
+
+  final ChatInfo chatInfo;
+
+  @override
+  Widget build(BuildContext context) {
+    ChatProvider chatProvider = Provider.of<ChatProvider>(context, listen: false);
+
+    TextEditingController messageController = TextEditingController();
+
+    return DefaultContainer(
+      padding: EdgeInsets.all(10),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextInputField(
+              controller: messageController,
+              label: '',
+            ),
+          ),
+          SizedBox(
+            width: 8.w,
+          ),
+          DefaultContainer(
+            onTap: () {
+              String content = messageController.text;
+              chatProvider.sendMessage(chatInfo, content, 1);
+              messageController.clear();
+            },
+            padding: EdgeInsets.all(10),
+            child: Icon(
+              Icons.send_rounded,
+              color: AppColors.primaryColor,
+            ),
+          )
+        ],
       ),
     );
   }

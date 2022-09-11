@@ -4,7 +4,7 @@ import 'package:chat_translator/components/default_container.dart';
 import 'package:chat_translator/models/chat_info.dart';
 import 'package:chat_translator/providers/auth_provider.dart';
 import 'package:chat_translator/providers/chat_provider.dart';
-import 'package:chat_translator/screens/chat_screen.dart';
+import 'package:chat_translator/router/routes.dart';
 import 'package:chat_translator/utils/color_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -204,13 +204,13 @@ class OthersProfileScreen extends StatelessWidget {
                     ),
                     DefaultContainer(
                       onTap: () async {
-                        ChatInfo chatInfo = ChatInfo(authProvider.userData!, authProvider.otherUserData!);
+                        ChatInfo chatInfo = ChatInfo(fromUser: authProvider.userData!, toUser: authProvider.otherUserData!);
                         bool docExists = await chatProvider.checkDocExists(chatInfo.getChatId());
                         if (!docExists) {
                           chatProvider.createChat(chatInfo);
                         }
-                        // Navigator.pushNamed(context, Routes.CHAT_SCREEN, arguments: [chatInfo]);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(chatInfo: chatInfo)));
+                        Navigator.pushNamed(context, Routes.getChatScreenRoute(chatInfo.toUser.id), arguments: chatInfo.toMap());
+                        // Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(chatInfo: chatInfo.toMap())));
                       },
                       padding: EdgeInsets.all(16),
                       color: AppColors.primaryColor,
