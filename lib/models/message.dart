@@ -1,5 +1,5 @@
 class Message {
-  // late String id;
+  late String id;
   String? idFrom;
   String? idTo;
   int? type;
@@ -10,7 +10,7 @@ class Message {
   String? timestamp;
 
   Message({
-    // required this.id,
+    required this.id,
     this.idFrom,
     this.idTo,
     this.type,
@@ -21,8 +21,8 @@ class Message {
     this.timestamp,
   });
 
-  Message.fromJson(Map<String, dynamic>? doc) {
-    // id = doc.id as String;
+  Message.fromJson(Map<String, dynamic>? doc, String messageId) {
+    id = messageId;
     idFrom = doc!['idFrom'] as String;
     idTo = doc['idTo'] as String;
     type = doc['type'] as int;

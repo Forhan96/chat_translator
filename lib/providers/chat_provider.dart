@@ -1,22 +1,40 @@
+import 'dart:convert';
+
+import 'package:chat_translator/models/chat_details.dart';
 import 'package:chat_translator/models/chat_info.dart';
 import 'package:chat_translator/models/message.dart';
+import 'package:chat_translator/models/user.dart';
+import 'package:chat_translator/services/auth_service.dart';
 import 'package:chat_translator/services/repository_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:encrypt/encrypt.dart' as EN;
 import 'package:flutter/cupertino.dart';
 
 class ChatProvider with ChangeNotifier {
+  final AuthService _authService = AuthService();
   final RepositoryService _repositoryService = RepositoryService();
 
-  // String _message = "";
-  //
-  // String get message => _message;
-  //
-  // set message(String value) {
-  //   _message = value;
-  //   notifyListeners();
-  // }
-
+  String _key = "";
+  bool _chatLoading = true;
+  List<ChatDetails> _chats = [];
   List<Message> _messages = [];
+  bool _otherUserLoading = true;
+
+  String get key => _key;
+  bool get chatLoading => _chatLoading;
+  List get chats => _chats;
   List get messages => _messages;
+  bool get otherUserLoading => _otherUserLoading;
+
+  set chatLoading(bool value) {
+    _chatLoading = value;
+    notifyListeners();
+  }
+
+  set otherUserLoading(bool value) {
+    _otherUserLoading = value;
+    notifyListeners();
+  }
 
   Future<bool> checkDocExists(String docId) async {
     return await _repositoryService.checkDocExists(docId);
@@ -31,16 +49,70 @@ class ChatProvider with ChangeNotifier {
     await _repositoryService.setChatLastMsg(chatInfo, content);
   }
 
+  Future<void> getChats() async {
+    _repositoryService.getChats(_authService.uid() ?? "", 20).listen((event) {
+      var docs = event.docs;
+      _chats.clear();
+      for (var element in docs) {
+        _chats.add(ChatDetails.fromJson(element.data() as Map<String, dynamic>));
+      }
+    });
+  }
+
   Future<void> getMessages(ChatInfo chatInfo) async {
     _repositoryService.getMessages(chatInfo.getChatId(), 20).listen((event) {
       var docs = event.docs;
       _messages.clear();
       for (var element in docs) {
-        _messages.add(Message.fromJson(element.data() as Map<String, dynamic>));
+        _messages.add(Message.fromJson(element.data() as Map<String, dynamic>, element.id));
         notifyListeners();
       }
       print(_messages.length);
       print(_messages);
     });
+  }
+
+  Future<void> getChatDetails(String chatId) async {
+    DocumentSnapshot<Map<String, dynamic>> chatDetails = await _repositoryService.getChatDetails(chatId);
+    ChatDetails.fromJson(chatDetails.data());
+  }
+
+  Future<void> getEncryptionKey(String chatId) async {
+    DocumentSnapshot<Map<String, dynamic>> chatDetailsSnapshot = await _repositoryService.getChatDetails(chatId);
+    ChatDetails chatDetails = ChatDetails.fromJson(chatDetailsSnapshot.data());
+    if (chatDetails.key != null) {
+      _key = chatDetails.key!;
+    } else {
+      _repositoryService.updateEncryptionKey(chatId: chatId);
+    }
+    notifyListeners();
+  }
+
+  String decryptMsg(String msg, String encryptionKey) {
+    String message = "";
+    try {
+      EN.Key key = EN.Key(base64.decode(encryptionKey));
+      final iv = EN.IV.fromLength(16);
+      final encryptor = EN.Encrypter(EN.AES(key));
+      var decodedMsgB64 = base64.decode(msg);
+      message = encryptor.decrypt(EN.Encrypted(decodedMsgB64), iv: iv);
+    } catch (e) {
+      print(e);
+    }
+    return message;
+  }
+
+  String? uid() {
+    return _authService.uid();
+  }
+
+  bool sendByMe(String uid) {
+    return _authService.uid() == uid;
+  }
+
+  Future<UserData?> getOtherUserData(String uid) async {
+    UserData? userData = await _repositoryService.getUserData(uid);
+    _otherUserLoading = false;
+    return userData;
   }
 }

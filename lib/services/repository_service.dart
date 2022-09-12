@@ -8,7 +8,6 @@ import 'package:random_string/random_string.dart';
 
 class RepositoryService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  // final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   Future<void> setUserData(UserData userData) async {
     await _firestore.collection('users').doc(userData.id).set(userData.toMap(), SetOptions(merge: true));
@@ -76,10 +75,8 @@ class RepositoryService {
     var doc = await _firestore.collection("messages").doc(chatId).get();
     doc.exists;
     await _firestore.collection("messages").doc(chatId).set({
-      "users": [
-        fromUserId,
-        toUserId,
-      ]
+      "isActive": true,
+      "users": [fromUserId, toUserId]
     });
   }
 
@@ -139,13 +136,38 @@ class RepositoryService {
         {
           'lastMessage': lastContent,
           'lastMessageTime': Timestamp.now(),
-          "lastMsgSeen": [chatInfo.fromUser.id]
+          "lastMessageSeen": [chatInfo.fromUser.id]
         },
       );
     });
   }
 
-  Stream<QuerySnapshot> getMessages(String messageID, int msgLimit) {
-    return _firestore.collection('messages').doc(messageID).collection(messageID).orderBy('timestamp', descending: true).limit(msgLimit).snapshots();
+  Stream<QuerySnapshot> getChats(String uid, int chatLimit) {
+    return _firestore
+        .collection('messages')
+        .where("users", arrayContains: uid)
+        .where("isActive", isEqualTo: true)
+        .orderBy('lastMessageTime', descending: true)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getMessages(String messageID, int messageLimit) {
+    return _firestore
+        .collection('messages')
+        .doc(messageID)
+        .collection(messageID)
+        .orderBy('timestamp', descending: true)
+        .limit(messageLimit)
+        .snapshots();
+  }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> getChatDetails(String chatId) async {
+    return await _firestore.collection("messages").doc(chatId).get();
+  }
+
+  Future<void> updateEncryptionKey({required String chatId}) async {
+    String random32String = randomString(32);
+    EN.Key key = EN.Key.fromUtf8(random32String);
+    await _firestore.collection("messages").doc(chatId).update({'key': key.base64});
   }
 }

@@ -17,55 +17,114 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     ChatProvider chatProvider = Provider.of<ChatProvider>(context);
     chatProvider.getMessages(chatInfo);
+    chatProvider.getEncryptionKey(chatInfo.getChatId());
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: AppColors.primaryColor,
-          ),
-        ),
-        title: Text(
-          chatInfo.toUser.name ?? "",
-          style: TextStyle(color: Colors.grey),
+      appBar: _buildAppBar(context),
+      body: _buildBody(chatProvider),
+    );
+  }
+
+  Center _buildBody(ChatProvider chatProvider) {
+    return Center(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
+              child: ListView.builder(
+                reverse: true,
+                itemCount: chatProvider.messages.length,
+                itemBuilder: (context, index) {
+                  var item = chatProvider.messages[index];
+                  return Align(
+                    alignment: (chatProvider.sendByMe(item.idFrom)) ? Alignment.topRight : Alignment.topLeft,
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 14, right: 14, top: 8, bottom: 8),
+                      child: GestureDetector(
+                        onDoubleTap: () {},
+                        child: AnimatedContainer(
+                          // width: item.translationLang ? 200.0 : 100.0,
+                          // height: selected ? 100.0 : 200.0,
+                          // color: selected ? Colors.red : Colors.blue,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: (chatProvider.sendByMe(item.idFrom) ? Colors.grey.shade200 : Colors.blue[200]),
+                          ),
+                          duration: const Duration(seconds: 2),
+                          curve: Curves.fastOutSlowIn,
+                          padding: const EdgeInsets.all(16),
+                          child: Text(chatProvider.decryptMsg(item.content, chatProvider.key)),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            ChatInputModule(
+              chatInfo: chatInfo,
+              messageController: messageController,
+            ),
+          ],
         ),
       ),
-      body: Center(
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      elevation: 0,
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.white,
+      flexibleSpace: SafeArea(
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
+          padding: EdgeInsets.only(right: 16),
+          child: Row(
+            children: <Widget>[
+              SizedBox(
+                width: 4,
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+              CircleAvatar(
+                backgroundImage: NetworkImage("https://picsum.photos/200"),
+                maxRadius: 20,
+              ),
+              SizedBox(
+                width: 12,
+              ),
               Expanded(
-                child: ListView.builder(
-                    reverse: true,
-                    itemCount: chatProvider.messages.length,
-                    itemBuilder: (context, index) {
-                      var item = chatProvider.messages[index];
-                      // return AnimatedContainer(
-                      //   width: item.translationLang ? 200.0 : 100.0,
-                      //   height: selected ? 100.0 : 200.0,
-                      //   color: selected ? Colors.red : Colors.blue,
-                      //   alignment: selected ? Alignment.center : AlignmentDirectional.topCenter,
-                      //   duration: const Duration(seconds: 2),
-                      //   curve: Curves.fastOutSlowIn,
-                      //   child: Text(item.contentLang),
-                      // );
-                      return ListTile(
-                        title: Text(item.contentLang),
-                      );
-                    }),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      chatInfo.toUser.name ?? "",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      chatInfo.toUser.nativeLanguage ?? "",
+                      style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                    ),
+                  ],
+                ),
               ),
-              ChatInputModule(
-                chatInfo: chatInfo,
-                messageController: messageController,
-              ),
+              // Icon(
+              //   Icons.settings,
+              //   color: Colors.black54,
+              // ),
             ],
           ),
         ),
