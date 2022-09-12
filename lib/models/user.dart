@@ -39,7 +39,7 @@ class UserData {
       'email': email,
       'avatar': avatar,
       'aboutMe': bio,
-      'birthDate': birthDate,
+      'birthDate': Timestamp.fromDate(birthDate!),
       'phoneNumber': phoneNumber,
       'country': country,
       'gender': gender,

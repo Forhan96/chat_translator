@@ -36,6 +36,8 @@ class _TextInputFieldState extends State<TextInputField> {
         fontSize: 16,
         fontWeight: FontWeight.bold,
       ),
+      minLines: 1,
+      maxLines: 6,
       decoration: InputDecoration(
         enabled: widget.enabled,
         floatingLabelBehavior: FloatingLabelBehavior.auto,

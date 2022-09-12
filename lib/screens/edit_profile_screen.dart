@@ -71,10 +71,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
         backgroundColor: Colors.white,
         // elevation: 1,
         shadowColor: Colors.grey.withOpacity(0.2),
-        title: const Text(
-          "Edit Profile",
-          style: TextStyle(color: Colors.grey),
-        ),
 
         leading: IconButton(
           onPressed: () {
@@ -84,6 +80,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> with InputValidat
             Icons.arrow_back_ios_new_rounded,
             color: AppColors.primaryColor,
           ),
+        ),
+        title: const Text(
+          "Edit Profile",
+          style: TextStyle(color: Colors.grey),
         ),
         centerTitle: true,
       ),
