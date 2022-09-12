@@ -191,4 +191,10 @@ class RepositoryService {
       "${uid}_showTrans": true,
     });
   }
+
+  Future<void> closeTranslation(String chatId, String messageId, String uid) async {
+    _firestore.collection("messages").doc(chatId).collection(chatId).doc(messageId).update({
+      "${uid}_showTrans": false,
+    });
+  }
 }

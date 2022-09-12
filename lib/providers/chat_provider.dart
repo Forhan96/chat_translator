@@ -58,6 +58,7 @@ class ChatProvider with ChangeNotifier {
       for (var element in docs) {
         _chats.add(ChatDetails.fromJson(element.data() as Map<String, dynamic>));
       }
+      notifyListeners();
     });
   }
 
@@ -66,11 +67,9 @@ class ChatProvider with ChangeNotifier {
       var docs = event.docs;
       _messages.clear();
       for (var element in docs) {
-        _messages.add(Message.fromJson(element.data() as Map<String, dynamic>, element.id));
+        _messages.add(Message.fromJson(element.data() as Map<String, dynamic>, element.id, _authService.uid() ?? ""));
         notifyListeners();
       }
-      print(_messages.length);
-      print(_messages);
     });
   }
 
@@ -122,21 +121,19 @@ class ChatProvider with ChangeNotifier {
       {required String message,
       required String chatId,
       required String messageId,
-      required String friendNativeLanguage,
-      required String nativeLanguage,
+      required String targetLanguage,
       required String encryptionKey}) async {
     TranslationBody translationBody = TranslationBody();
     String translatedText;
-    String translatedLang = "";
+    // String translatedLang = "";
     try {
-      translationBody = await TranslateUtils.translate(message, friendNativeLanguage, nativeLanguage);
+      translationBody = await TranslateUtils.translate(message, targetLanguage);
 
       translatedText = translationBody.translatedBody.toString();
-      // translatedLang = translatedLangName;
 
       _repositoryService.encryptAndStoreTranslation(
           translation: translatedText,
-          translatedLang: translatedLang,
+          translatedLang: targetLanguage,
           chatId: chatId,
           messageId: messageId,
           uid: _authService.uid() ?? "",
@@ -144,5 +141,9 @@ class ChatProvider with ChangeNotifier {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<void> closeTranslation({required String chatId, required String messageId}) async {
+    await _repositoryService.closeTranslation(chatId, messageId, _authService.uid() ?? "");
   }
 }

@@ -1,3 +1,5 @@
+// AuthService _authService = AuthService();
+
 class Message {
   late String id;
   String? idFrom;
@@ -8,6 +10,7 @@ class Message {
   String? translationLang;
   String? translatedContent;
   String? timestamp;
+  bool? show;
 
   Message({
     required this.id,
@@ -19,9 +22,10 @@ class Message {
     this.translationLang,
     this.translatedContent,
     this.timestamp,
+    this.show,
   });
 
-  Message.fromJson(Map<String, dynamic>? doc, String messageId) {
+  Message.fromJson(Map<String, dynamic>? doc, String messageId, String currentUserId) {
     id = messageId;
     idFrom = doc!['idFrom'] as String;
     idTo = doc['idTo'] as String;
@@ -31,5 +35,6 @@ class Message {
     translationLang = doc['translationLang'] as String?;
     translatedContent = doc['translatedContent'] as String?;
     timestamp = doc['timestamp'] as String;
+    show = doc['${currentUserId}_showTrans'] != null ? doc['${currentUserId}_showTrans'] as bool : false;
   }
 }

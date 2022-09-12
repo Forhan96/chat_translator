@@ -9,16 +9,16 @@ import 'package:selection_dialogs/language_convert.dart';
 class TranslateUtils {
   static const _apiKey = 'AIzaSyAjYUoKhxXPFGBBKOdceeiBKI_X0wBpGSM';
 
-  static Future<TranslationBody> translate(String message, String friendNativeLanguage, String nativeLanguage) async {
-    String learningLangCode = LanguageConvert().nameToCode(friendNativeLanguage);
-    String nativeLangCode = LanguageConvert().nameToCode(nativeLanguage);
+  static Future<TranslationBody> translate(String message, String targetLanguage) async {
+    // String learningLangCode = LanguageConvert().nameToCode(friendNativeLanguage);
+    String targetLanguageCode = LanguageConvert().nameToCode(targetLanguage);
 
-    TranslationBody translationBody = await _translateApiResponse(nativeLangCode, message);
-    if (translationBody.inputLang != null) {
-      if (translationBody.inputLang != learningLangCode) {
-        translationBody = await _translateApiResponse(learningLangCode, message);
-      }
-    }
+    TranslationBody translationBody = await _translateApiResponse(targetLanguageCode, message);
+    // if (translationBody.inputLang != null) {
+    //   if (translationBody.inputLang != learningLangCode) {
+    //     translationBody = await _translateApiResponse(learningLangCode, message);
+    //   }
+    // }
     return translationBody;
   }
 
