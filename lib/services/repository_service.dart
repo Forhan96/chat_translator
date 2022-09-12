@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:chat_translator/models/chat_info.dart';
 import 'package:chat_translator/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:encrypt/encrypt.dart' as EN;
+import 'package:encrypt/encrypt.dart' as en;
 import 'package:random_string/random_string.dart';
 
 class RepositoryService {
@@ -93,21 +93,21 @@ class RepositoryService {
 
     //************ENCRYPTION*****************
 
-    EN.Key key;
-    EN.Encrypted encrypted;
+    en.Key key;
+    en.Encrypted encrypted;
     final msgDoc = _firestore.collection('messages').doc(chatInfo.getChatId());
     final msgValue = await msgDoc.get();
     if (msgValue.data()!['key'] != null) {
-      key = EN.Key(base64.decode(msgValue.data()!['key'].toString()));
+      key = en.Key(base64.decode(msgValue.data()!['key'].toString()));
     } else {
       String random32String = randomString(32);
-      key = EN.Key.fromUtf8(random32String);
+      key = en.Key.fromUtf8(random32String);
 
       msgDoc.update({'key': key.base64});
     }
 
-    final iv = EN.IV.fromLength(16);
-    final encrypter = EN.Encrypter(EN.AES(key));
+    final iv = en.IV.fromLength(16);
+    final encrypter = en.Encrypter(en.AES(key));
     encrypted = encrypter.encrypt(content, iv: iv);
 
     //************ENCRYPTION*****************
@@ -167,7 +167,28 @@ class RepositoryService {
 
   Future<void> updateEncryptionKey({required String chatId}) async {
     String random32String = randomString(32);
-    EN.Key key = EN.Key.fromUtf8(random32String);
+    en.Key key = en.Key.fromUtf8(random32String);
     await _firestore.collection("messages").doc(chatId).update({'key': key.base64});
+  }
+
+  Future<void> encryptAndStoreTranslation({
+    required String translation,
+    required String translatedLang,
+    required String chatId,
+    required String messageId,
+    required String uid,
+    required String encryptionKey,
+  }) async {
+    //encrypting translated msg
+    final en.Key key = en.Key(base64.decode(encryptionKey.toString()));
+    final iv = en.IV.fromLength(16);
+    final encryptor = en.Encrypter(en.AES(key));
+    final en.Encrypted encrypted = encryptor.encrypt(translation, iv: iv);
+    //saving translated content in db
+    _firestore.collection("messages").doc(chatId).collection(chatId).doc(messageId).update({
+      "translatedContent": encrypted.base64,
+      "translatedContentLang": translatedLang,
+      "${uid}_showTrans": true,
+    });
   }
 }

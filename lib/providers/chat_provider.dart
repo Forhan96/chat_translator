@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:chat_translator/models/chat_details.dart';
 import 'package:chat_translator/models/chat_info.dart';
 import 'package:chat_translator/models/message.dart';
+import 'package:chat_translator/models/translation.dart';
 import 'package:chat_translator/models/user.dart';
 import 'package:chat_translator/services/auth_service.dart';
 import 'package:chat_translator/services/repository_service.dart';
+import 'package:chat_translator/utils/translate_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:encrypt/encrypt.dart' as EN;
 import 'package:flutter/cupertino.dart';
@@ -114,5 +116,33 @@ class ChatProvider with ChangeNotifier {
     UserData? userData = await _repositoryService.getUserData(uid);
     _otherUserLoading = false;
     return userData;
+  }
+
+  Future<void> translate(
+      {required String message,
+      required String chatId,
+      required String messageId,
+      required String friendNativeLanguage,
+      required String nativeLanguage,
+      required String encryptionKey}) async {
+    TranslationBody translationBody = TranslationBody();
+    String translatedText;
+    String translatedLang = "";
+    try {
+      translationBody = await TranslateUtils.translate(message, friendNativeLanguage, nativeLanguage);
+
+      translatedText = translationBody.translatedBody.toString();
+      // translatedLang = translatedLangName;
+
+      _repositoryService.encryptAndStoreTranslation(
+          translation: translatedText,
+          translatedLang: translatedLang,
+          chatId: chatId,
+          messageId: messageId,
+          uid: _authService.uid() ?? "",
+          encryptionKey: encryptionKey);
+    } catch (e) {
+      print(e);
+    }
   }
 }
