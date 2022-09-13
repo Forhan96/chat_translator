@@ -54,7 +54,7 @@ class UserData {
     name = doc['name'] as String?;
     userName = doc['userName'] as String?;
     email = doc['email'] as String?;
-    avatar = doc['avatar'] as String?;
+    avatar = doc['avatar'] != null ? doc['avatar'] as String? : "";
     bio = doc['aboutMe'] as String?;
     birthDate = (doc['birthDate'] as Timestamp?)?.toDate();
     phoneNumber = doc['phoneNumber'] as String?;

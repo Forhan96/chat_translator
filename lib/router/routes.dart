@@ -5,6 +5,7 @@ class Routes {
   static String SEARCH_SCREEN = "/search";
   static String PROFILE_SCREEN = "/profile";
   static String EDIT_PROFILE_SCREEN = "/edit-profile";
+  static String PROFILE_IMAGE_SCREEN = "/profile-image";
   static String OTHERS_PROFILE_SCREEN = "/others-profile";
   static String CHAT_SCREEN = "/chat";
 

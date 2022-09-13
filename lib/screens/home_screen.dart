@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (context, AsyncSnapshot snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.waiting:
-                            return const DefaultContainer(
+                            return DefaultContainer(
                               child: ChatTileShimmer(),
                             );
                           default:
@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       backgroundColor: AppColors.primaryColor,
                                       child: ClipOval(
                                         child: CachedNetworkImage(
-                                          imageUrl: "https://picsum.photos/200",
+                                          imageUrl: chatInfo?.toUser.avatar ?? "https://picsum.photos/200",
                                           fit: BoxFit.cover,
                                           width: 48,
                                           height: 48,

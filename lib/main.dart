@@ -1,6 +1,7 @@
 import 'package:chat_translator/chat_translator_app.dart';
 import 'package:chat_translator/providers/auth_provider.dart';
 import 'package:chat_translator/providers/chat_provider.dart';
+import 'package:chat_translator/providers/image_change_provider.dart';
 import 'package:chat_translator/providers/search_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ Future<void> main() async {
       ChangeNotifierProvider<AuthProvider>.value(value: AuthProvider()),
       ChangeNotifierProvider<SearchProvider>.value(value: SearchProvider()),
       ChangeNotifierProvider<ChatProvider>.value(value: ChatProvider()),
-      // ChangeNotifierProvider<PersonalInfoProvider>.value(value: PersonalInfoProvider()),
+      ChangeNotifierProvider<ImageChangeProvider>.value(value: ImageChangeProvider()),
     ],
     child: const ChatTranslatorApp(),
   ));

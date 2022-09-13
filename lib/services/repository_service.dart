@@ -13,6 +13,10 @@ class RepositoryService {
     await _firestore.collection('users').doc(userData.id).set(userData.toMap(), SetOptions(merge: true));
   }
 
+  Future<void> updateUserData(String uid, Map<String, dynamic> data) async {
+    await _firestore.collection('users').doc(uid).set(data, SetOptions(merge: true));
+  }
+
   Future<UserData?> getUserData(String userId) async {
     ///currentUser= true, means fcmToken will be updated.
     ///Do Not set currentUser=true for other user

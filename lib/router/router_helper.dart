@@ -1,6 +1,7 @@
 import 'package:chat_translator/chat_translator_app.dart';
 import 'package:chat_translator/models/chat_info.dart';
 import 'package:chat_translator/router/routes.dart';
+import 'package:chat_translator/screens/change_profile_image_screen.dart';
 import 'package:chat_translator/screens/chat_screen.dart';
 import 'package:chat_translator/screens/edit_profile_screen.dart';
 import 'package:chat_translator/screens/home_screen.dart';
@@ -37,6 +38,7 @@ class RouterHelper {
   static final Handler _profileScreenHandler = Handler(handlerFunc: (context, parameters) => ProfileScreen());
   static final Handler _othersProfileScreenHandler = Handler(handlerFunc: (context, parameters) => OthersProfileScreen(uid: parameters["uid"]![0]));
   static final Handler _editProfileScreenHandler = Handler(handlerFunc: (context, parameters) => EditProfileScreen());
+  static final Handler _profileImageScreenHandler = Handler(handlerFunc: (context, parameters) => ProfileImageScreen());
 
   static final Handler _notFoundHandler = Handler(handlerFunc: (context, parameters) {
     print("No Router Found!");
@@ -97,6 +99,11 @@ class RouterHelper {
     router.define(
       Routes.EDIT_PROFILE_SCREEN,
       handler: _editProfileScreenHandler,
+      transitionType: TransitionType.fadeIn,
+    );
+    router.define(
+      Routes.PROFILE_IMAGE_SCREEN,
+      handler: _profileImageScreenHandler,
       transitionType: TransitionType.fadeIn,
     );
 

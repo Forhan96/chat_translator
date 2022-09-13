@@ -85,7 +85,7 @@ class SearchScreen extends StatelessWidget {
                     backgroundColor: AppColors.primaryColor,
                     child: ClipOval(
                       child: CachedNetworkImage(
-                        imageUrl: "https://picsum.photos/200",
+                        imageUrl: searchResults[index].avatar ?? "https://picsum.photos/200",
                         fit: BoxFit.cover,
                         width: 48,
                         height: 48,

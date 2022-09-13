@@ -5,12 +5,14 @@ class DefaultContainer extends StatelessWidget {
   final Function? onTap;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
+  AlignmentGeometry? alignment;
   final Color? color;
-  const DefaultContainer({
+  DefaultContainer({
     Key? key,
     this.child,
     this.padding,
     this.margin,
+    this.alignment,
     this.onTap,
     this.color = Colors.white,
   }) : super(key: key);
@@ -22,7 +24,7 @@ class DefaultContainer extends StatelessWidget {
         onTap?.call();
       },
       child: Container(
-        alignment: Alignment.centerLeft,
+        alignment: alignment ?? Alignment.centerLeft,
         padding: padding,
         margin: margin,
         decoration: BoxDecoration(

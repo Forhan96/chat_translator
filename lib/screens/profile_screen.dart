@@ -69,15 +69,20 @@ class ProfileScreen extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CircleAvatar(
-                            radius: 32,
-                            backgroundColor: AppColors.primaryColor,
-                            child: ClipOval(
-                              child: CachedNetworkImage(
-                                imageUrl: "https://picsum.photos/200",
-                                fit: BoxFit.cover,
-                                width: 56,
-                                height: 56,
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, Routes.PROFILE_IMAGE_SCREEN);
+                            },
+                            child: CircleAvatar(
+                              radius: 32,
+                              backgroundColor: AppColors.primaryColor,
+                              child: ClipOval(
+                                child: CachedNetworkImage(
+                                  imageUrl: authProvider.userData?.avatar ?? "https://picsum.photos/200",
+                                  fit: BoxFit.cover,
+                                  width: 56,
+                                  height: 56,
+                                ),
                               ),
                             ),
                           ),

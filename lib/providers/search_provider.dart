@@ -83,7 +83,7 @@ class SearchProvider extends DisposableProvider {
           SearchResultObject(
             name: searchResult["name"] as String,
             userId: _resultUserId,
-            // avatar: searchResult["avatar"] as String,
+            avatar: searchResult["avatar"] as String,
             nativeLanguage: searchResult["nativeLanguage"] as String,
             learningLanguage: searchResult["learningLanguage"] as String,
           ),

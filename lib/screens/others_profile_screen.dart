@@ -54,7 +54,7 @@ class OthersProfileScreen extends StatelessWidget {
                             backgroundColor: AppColors.primaryColor,
                             child: ClipOval(
                               child: CachedNetworkImage(
-                                imageUrl: "https://picsum.photos/200",
+                                imageUrl: authProvider.otherUserData?.avatar ?? "https://picsum.photos/200",
                                 fit: BoxFit.cover,
                                 width: 56,
                                 height: 56,

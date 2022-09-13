@@ -148,7 +148,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               ),
               CircleAvatar(
-                backgroundImage: NetworkImage("https://picsum.photos/200"),
+                backgroundImage: NetworkImage(
+                  widget.chatInfo.toUser.avatar ?? "https://picsum.photos/200",
+                ),
                 maxRadius: 20,
               ),
               SizedBox(
