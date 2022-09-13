@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:chat_translator/models/user.dart';
 import 'package:chat_translator/services/auth_service.dart';
 import 'package:chat_translator/services/repository_service.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class AuthProvider with ChangeNotifier {
   final AuthService _authService = AuthService();

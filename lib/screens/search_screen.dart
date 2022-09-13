@@ -70,14 +70,12 @@ class SearchScreen extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: ListView.builder(
           itemCount: searchResults.length,
-          // prototypeItem: ListTile(
-          //   title: Text(items.first),
-          // ),
           itemBuilder: (context, index) {
             return DefaultContainer(
               onTap: () {
                 Navigator.pushNamed(context, Routes.getOthersProfileScreenRoute(searchResults[index].userId));
               },
+              margin: EdgeInsets.symmetric(vertical: 4.h),
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,7 +140,7 @@ class SearchScreen extends StatelessWidget {
 
   DefaultContainer _buildSearchOptions(BuildContext context, SearchProvider searchProvider, Map<String, dynamic> searchParameters) {
     return DefaultContainer(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Column(
         children: [
           DefaultContainer(
