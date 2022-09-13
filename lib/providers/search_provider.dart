@@ -1,10 +1,11 @@
 import 'package:chat_translator/models/search_result.dart';
+import 'package:chat_translator/providers/disposable_provider.dart';
 import 'package:chat_translator/services/auth_service.dart';
 import 'package:chat_translator/services/repository_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
-class SearchProvider with ChangeNotifier {
+class SearchProvider extends DisposableProvider {
   final RepositoryService _repositoryService = RepositoryService();
   final AuthService _authService = AuthService();
 
@@ -94,5 +95,18 @@ class SearchProvider with ChangeNotifier {
     }
     _searchResultList = resultList;
     notifyListeners();
+  }
+
+  @override
+  void disposeValues() {
+    _searchParameters = {
+      "gender": "",
+      "native_lang": "",
+      "learning_lang": "",
+      "country": "",
+    };
+    _searchResultList.clear();
+    _showSearchOptions = true;
+    _showSearchResults = false;
   }
 }

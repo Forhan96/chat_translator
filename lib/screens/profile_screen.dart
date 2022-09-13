@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_translator/components/animations/loading_animation.dart';
 import 'package:chat_translator/components/default_container.dart';
 import 'package:chat_translator/components/default_navbar.dart';
+import 'package:chat_translator/providers/app_providers.dart';
 import 'package:chat_translator/providers/auth_provider.dart';
 import 'package:chat_translator/router/routes.dart';
 import 'package:chat_translator/utils/color_const.dart';
@@ -45,6 +46,7 @@ class ProfileScreen extends StatelessWidget {
           IconButton(
             onPressed: () {
               Provider.of<AuthProvider>(context, listen: false).signOut();
+              AppProviders.disposeAllDisposableProviders(context);
               Navigator.pushReplacementNamed(context, Routes.AUTH_WRAPPER);
             },
             icon: Icon(

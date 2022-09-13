@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.all(10),
             child: ListView.builder(
                 itemCount: chatProvider.chats.length,
+                physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
                   ChatDetails item = chatProvider.chats[index];
                   List user = item.users!.where((element) => element != Provider.of<AuthProvider>(context, listen: false).uid()).toList();
@@ -67,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onTap: () {
                                   Navigator.pushNamed(context, Routes.getChatScreenRoute(chatInfo?.toUser.id ?? ""), arguments: chatInfo?.toMap());
                                 },
+                                margin: EdgeInsets.symmetric(vertical: 4.h),
                                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
