@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       backgroundColor: AppColors.primaryColor,
                                       child: ClipOval(
                                         child: CachedNetworkImage(
-                                          imageUrl: chatInfo?.toUser.avatar ?? "https://picsum.photos/200",
+                                          imageUrl: chatInfo?.toUser.avatar !="" ?chatInfo?.toUser.avatar??"https://picsum.photos/200":"https://picsum.photos/200",
                                           fit: BoxFit.cover,
                                           width: 48,
                                           height: 48,
