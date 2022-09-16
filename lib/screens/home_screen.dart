@@ -50,10 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
                   ChatDetails item = chatProvider.chats[index];
-                  List user = item.users!.where((element) => element != Provider.of<AuthProvider>(context, listen: false).uid()).toList();
+                  List user = item.users!
+                      .where((element) => element != Provider.of<AuthProvider>(context, listen: false).uid())
+                      .toList();
 
                   return FutureBuilder<ChatInfo>(
-                      future: _getChatInfo(Provider.of<AuthProvider>(context, listen: false), chatProvider, user[0]),
+                      future:
+                          _getChatInfo(Provider.of<AuthProvider>(context, listen: false), chatProvider, user[0]),
                       builder: (context, AsyncSnapshot snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.waiting:
@@ -66,7 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               ChatInfo? chatInfo = snapshot.data;
                               return DefaultContainer(
                                 onTap: () {
-                                  Navigator.pushNamed(context, Routes.getChatScreenRoute(chatInfo?.toUser.id ?? ""), arguments: chatInfo?.toMap());
+                                  Navigator.pushNamed(
+                                      context, Routes.getChatScreenRoute(chatInfo?.toUser.id ?? ""),
+                                      arguments: chatInfo?.toMap());
                                 },
                                 margin: EdgeInsets.symmetric(vertical: 4.h),
                                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
@@ -78,7 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       backgroundColor: AppColors.primaryColor,
                                       child: ClipOval(
                                         child: CachedNetworkImage(
-                                          imageUrl: chatInfo?.toUser.avatar ?? "https://picsum.photos/200",
+                                          imageUrl: chatInfo?.toUser.avatar != ""
+                                              ? chatInfo?.toUser.avatar ?? "https://picsum.photos/200"
+                                              : "https://picsum.photos/200",
                                           fit: BoxFit.cover,
                                           width: 48,
                                           height: 48,
@@ -99,7 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Text(
                                             // searchResults[index].name,
                                             chatInfo?.toUser.name ?? "Name",
-                                            style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
+                                            style: TextStyle(
+                                                color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                                           ),
                                           SizedBox(
                                             height: 6.h,
@@ -107,7 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Text(
                                             // "Native: ${searchResults[index].nativeLanguage}",
                                             item.lastMessage ?? "Start chat",
-                                            style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
+                                            style: TextStyle(
+                                                color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
