@@ -96,7 +96,7 @@ class ProfileImageScreen extends StatelessWidget {
                     ),
                     DefaultContainer(
                       onTap: () async {
-                        if (imageChangeProvider.imageChanged) {
+                        if (!imageChangeProvider.imageChanged) {
                           final snackBar = SnackBar(
                             backgroundColor: AppColors.errorColor,
                             content: Text(
